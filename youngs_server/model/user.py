@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from sqlalchemy import Column, Integer, String, TEXT
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from youngs_server.model import Base
 
@@ -14,8 +14,8 @@ class User(Base):
     password = Column(String(55), unique=False)
     nickname = Column(String(15), unique=True)
     imageFileNameOriginal = Column(String(400), unique=False)
-    Filename = Column(String(400), unique=False)
-    Filesize = Column(Integer, unique=False)
+    fileName = Column(String(400), unique=False)
+    fileSize = Column(Integer, unique=False)
     learnClassCnt = Column(Integer, unique=False)
     point = Column(Integer, unique=False)
     teachingClassCnt = Column(Integer, unique=False)
@@ -26,10 +26,16 @@ class User(Base):
     review = relationship('Review', backref='user')
 
     #id는 자동생성
-    def __init__(self, name, email, password):
-        self.username = name
+    def __init__(self, email, password, nickname, imageFileNameOriginal, fileName, fileSize, learnClassCnt, point, teachingClassCnt):
         self.email = email
         self.password = password
+        self.nickname = nickname
+        self.imageFileNameOriginal = imageFileNameOriginal
+        self.fileName = fileName
+        self.fileSize = fileSize
+        self.learnClassCnt = learnClassCnt
+        self.point = point
+        self.teachingClassCnt = teachingClassCnt
 
     def __repr__(self):
-        return '<User %r %r>' % (self.username, self.email)
+        return '<User %r %r>' % (self.nickname, self.email)
