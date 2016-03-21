@@ -25,10 +25,7 @@ class Channel(Base):
     fileName = Column(String(400), unique=False)
     fileSize = Column(Integer, unique=False)
 
-    userChannel = relationship('UserChannel',
-                               backref='channel')
     user = relationship('User', backref='channel')
-    review = relationship('Review', backref='channel')
 
     # id는 자동생성
     def __init__(self, title, description, teacherId, youtubeURL, isFree, teachingDay, teachingStartTime,

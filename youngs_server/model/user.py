@@ -20,11 +20,6 @@ class User(Base):
     point = Column(Integer, unique=False)
     teachingClassCnt = Column(Integer, unique=False)
 
-    userChannel = relationship('UserChannel',
-                          backref='user')
-    channel = relationship('Channel', backref='user')
-    review = relationship('Review', backref='user')
-
     #id는 자동생성
     def __init__(self, email, password, nickname, imageFileNameOriginal, fileName, fileSize, learnClassCnt, point, teachingClassCnt):
         self.email = email
