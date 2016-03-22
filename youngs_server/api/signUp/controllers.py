@@ -50,7 +50,7 @@ class UserSignup(Resource):
 
         signupUser = User(
                 email=args.email,
-                password = generate_password_hash(args.pw),
+                password = self.hash_password(args.pw),
                 nickname = args.nickname,
                 imageFileNameOriginal = None,
                 fileName = None,

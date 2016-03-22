@@ -4,6 +4,7 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from youngs_server.model import Base
+from werkzeug.security import generate_password_hash
 
 
 class User(Base):
@@ -34,3 +35,6 @@ class User(Base):
 
     def __repr__(self):
         return '<User %r %r>' % (self.nickname, self.email)
+
+    def hash_password(self, password):
+        self.password = generate_password_hash(password)
