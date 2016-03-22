@@ -19,12 +19,12 @@ class DBManager:
                                         autoflush=False,
                                         bind=DBManager.__engine))
 
-        global dao
-        dao = DBManager.__session
+        global dbManager
+        dbManager = DBManager.__session
 
     @staticmethod
     def init_db():
         from youngs_server.model import Base
         Base.metadata.create_all(bind=DBManager.__engine)
 
-dao = None
+dbManager = None
