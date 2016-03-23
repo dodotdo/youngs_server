@@ -16,8 +16,8 @@ class UserChannel(Base):
     #d - default, f-favorite, r-read
     type = Column(VARCHAR, unique=False)
 
-    user = relationship('User', backref='userChannel')
-    channel = relationship('Channel', backref='userChannel')
+    user = relationship('User', backref='userChannel', cascade='save-update, delete')
+    channel = relationship('Channel', backref='userChannel', cascade='save-update, delete')
 
     # id는 자동생성
     def __init__(self, userId, channelId, type):

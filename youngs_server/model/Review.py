@@ -17,7 +17,7 @@ class Review(Base):
     channelId = Column(Integer, unique=False)
     teacherId = Column(Integer, unique=False)
 
-    user = relationship('User', backref='review')
+    user = relationship('User', backref='review', cascade='save-update, delete')
 
     # id는 자동생성
     def __init__(self, userId, rate, review, uploadDate, channelId, teacherId):

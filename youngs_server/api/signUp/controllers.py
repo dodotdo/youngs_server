@@ -6,12 +6,11 @@ from youngs_server.model import model_fields
 from flask_restful import Resource, Api, reqparse, abort, marshal
 from flask import Blueprint
 from youngs_server.model.User import User
-from werkzeug.security import generate_password_hash
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
-api_signup = Blueprint('signup', __name__, url_prefix='/api/signup')
-signup_rest = Api(api_signup)
+apiSignup = Blueprint('signup', __name__, url_prefix='/api/signup')
+signupRest = Api(apiSignup)
 
 
 class UserSignup(Resource):
@@ -68,4 +67,4 @@ class UserSignup(Resource):
 
 
 
-signup_rest.add_resource(UserSignup, '')
+signupRest.add_resource(UserSignup, '')

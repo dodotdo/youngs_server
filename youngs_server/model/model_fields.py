@@ -9,3 +9,20 @@ user_fields = {
     'point' : fields.Integer,
     'teachingClassCnt' : fields.Integer
 }
+
+channel_fields = {
+    'channelId' : fields.Integer,
+    'title' : fields.String,
+    'description' : fields.String,
+    'teacherId' : fields.Integer,
+    'youtubeURL' : fields.String,
+    'isFree' : fields.Boolean,
+    'teachingDay' : fields.Integer,
+    'teachingStartTime' : fields.FormattedString('{teaching_start_time.hour}/{teaching_start_time.minute}'),
+    'teachingEndTime' : fields.FormattedString('{teaching_end_time.hour}/{teaching_end_time.minute}'),
+    'price' : fields.Integer,
+    'listeningLimitCnt' : fields.Integer,
+    'coverImageFileNameOriginal' : fields.String,
+    'fileName' : fields.String,
+    'fileSize' : fields.Integer
+}
