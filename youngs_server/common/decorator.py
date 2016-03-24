@@ -3,11 +3,14 @@ from datetime import date, time, datetime, timedelta
 from dateutil import tz
 from functools import wraps
 from flask import current_app, jsonify, session, request
-from youngs_server import database, youngs_logger
+from youngs_server import database
 from flask_restful import abort
+from youngs_server.youngs_logger import Log
+
 
 def token_required(f):
     """ token checking decoration """
+
     @wraps(f)
     def decorated_function(*args, **kwargs):
         # print session
@@ -25,12 +28,13 @@ def token_required(f):
             session['token'] = '1'
             print session
         elif current_app.r.get(token) is None:
-            youngs_logger.error('token invalid : token [' + token + ']')
+            Log.error('token invalid : token [' + token + ']')
             abort(403, message='token invalid')
         else:
             userinfo = ast.literal_eval(current_app.r.get(token))
             session['userId'] = userinfo['userId']
             session['token'] = token
-        youngs_logger.info('token valid : user [' + session['userid'] + ']')
+        Log.info('token valid : user [' + session['userid'] + ']')
         return f(*args, **kwargs)
+
     return decorated_function

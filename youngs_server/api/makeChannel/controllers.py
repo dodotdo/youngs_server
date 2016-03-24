@@ -15,7 +15,7 @@ makeChannelRest = Api(apiMakeChannel)
 
 
 class MakeChannel(Resource):
-    #채널만들기 api
+    # 채널만들기 api
 
     def __init__(self):
         self.make_channel_post_parser = reqparse.RequestParser()
@@ -95,8 +95,6 @@ class MakeChannel(Resource):
             help='cover filesize of channel'
         )
 
-
-
     def post(self):
         """makeChannel"""
         args = self.make_channel_post_parser.parse_args()
@@ -108,31 +106,29 @@ class MakeChannel(Resource):
 
         if args.coverImageFileNameOriginal is None:
             coverImageFileNameOriginal = ''
-        else :
+        else:
             coverImageFileNameOriginal = args.coverImageFileNameOriginal
 
         channel = Channel(
-            title = args.title,
-            description = args.description,
-            teacherId = args.teacherId,
-            youtubeURL = args.youtubeURL,
-            isFree = args.isFree,
-            teachingDay = args.teachingDay,
-            teachingStartTime = args.teachingStartTime,
-            teachingEndTime = args.teachingEndTime,
-            price = args.price,
-            listeningLimitCnt = args.listeningLimitCnt,
-            coverImageFileNameOriginal = coverImageFileNameOriginal,
-            fileName = '',
-            fileSize = 0
+            title=args.title,
+            description=args.description,
+            teacherId=args.teacherId,
+            youtubeURL=args.youtubeURL,
+            isFree=args.isFree,
+            teachingDay=args.teachingDay,
+            teachingStartTime=args.teachingStartTime,
+            teachingEndTime=args.teachingEndTime,
+            price=args.price,
+            listeningLimitCnt=args.listeningLimitCnt,
+            coverImageFileNameOriginal=coverImageFileNameOriginal,
+            fileName='',
+            fileSize=0
         )
 
         dbManager.__session.add(channel)
         dbManager.__session.commit()
 
         return marshal(channel, model_fields.channel_fields, envelope='results')
-
-
 
 
 makeChannelRest.add_resource(MakeChannel, '')

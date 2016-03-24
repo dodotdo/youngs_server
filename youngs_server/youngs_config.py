@@ -21,3 +21,7 @@ class YoungsConfig(object):
     LOG_FILE_PATH = 'resource/log/youngs.log'
     #: 디폴트 SQLAlchemy trace log 설정
     DB_LOG_FLAG = 'True'
+    #: 토큰 시크릿 키
+    SECRET_KEY = 'aesfafaefaesfaew'
+    #: 세션 유지 시간
+    SESSION_ALIVE_MINUTES = 120
