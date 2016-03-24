@@ -26,3 +26,7 @@ channel_fields = {
     'fileName' : fields.String,
     'fileSize' : fields.Integer
 }
+
+channel_list_fields = {
+    'results': fields.List(fields.Nested(channel_fields))
+}
