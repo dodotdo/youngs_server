@@ -11,35 +11,15 @@ from youngs_server.common.decorator import token_required
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
-apiLogin = Blueprint('login', __name__, url_prefix='/api/login')
-loginRest = Api(apiLogin)
+api = Blueprint('loginOut', __name__, url_prefix='/api')
 
 
-class LoginOut(Resource):
-    # 채널 api
+@api.route('/login')
+def login():
+    if request.method == 'POST':
 
-    def __init__(self):
-        self.login_parser = reqparse.RequestParser()
-        self.login_parser.add_argument(
-            'email', dest='email',
-            location='json', required=True,
-            type=str,
-            help='email of user'
-        )
-        self.login_parser.add_argument(
-            'password', dest='password',
-            location='json', required=True,
-            type=str,
-            help='password of user'
-        )
-
-    def post(self):
-        """ login """
-
-        args = self.login_parser.parse_args()
-
-        requestEmail = args.email
-        requestPassword = args.password
+        requestEmail = request.json.get('email')
+        requestPassword = request.json.get('password')
 
         user = User.query.filter_by(email=requestEmail).first()
 
@@ -74,23 +54,18 @@ class LoginOut(Resource):
         return marshal(user, model_fields.user_fields, envelope='results')
 
     @token_required
-    def get(self):
-        """
-        logout
-        """
-        token = request.headers.get('Authorization')
+    @api.route('/logout')
+    def logout():
+        if request.method == 'get':
 
-        if token is None:
-            Log.error('token is None')
-            return jsonify({'message': 'token is None'}), 400
+            token = request.headers.get('Authorization')
 
-        token = token[6:]
-        if current_app.r.get(token) is not None:
-            current_app.r.delete(token)
+            if token is None:
+                Log.error('token is None')
+                return jsonify({'message': 'token is None'}), 400
 
-        session = None
+            token = token[6:]
+            if current_app.r.get(token) is not None:
+                current_app.r.delete(token)
 
-        return jsonify({'result': 'logout success'})
-
-
-loginRest.add_resource(LoginOut, '')
+            return jsonify({'result': 'logout success'})

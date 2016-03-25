@@ -30,3 +30,15 @@ channel_fields = {
 channel_list_fields = {
     'results': fields.List(fields.Nested(channel_fields))
 }
+
+review_fields = {
+    'userId' : fields.Integer,
+    'rate' : fields.Float,
+    'review' : fields.String,
+    'uploadDate' : fields.DateTime,
+    'channelId' : fields.Integer
+}
+
+review_list_fields = {
+    'results' : fields.List(fields.Nested(review_fields))
+}

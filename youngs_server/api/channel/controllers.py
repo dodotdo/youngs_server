@@ -10,7 +10,7 @@ from youngs_server.common.decorator import token_required
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
-apiChannelInfo = Blueprint('channel_info', __name__, url_prefix='/api/channelInfo')
+apiChannelInfo = Blueprint('channel_info', __name__, url_prefix='/api/channelList')
 channelInfoRest = Api(apiChannelInfo)
 
 

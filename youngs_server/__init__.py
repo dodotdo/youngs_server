@@ -24,14 +24,14 @@ def create_app(config_filepath='resource/config.cfg'):
     youngs_app = Flask(__name__)
 
     from youngs_server.youngs_config import YoungsConfig
-    photolog_app.config.from_object(PhotologConfig)
-    photolog_app.config.from_pyfile(config_filepath, silent=True)
-    print_settings(photolog_app.config.iteritems())
+    youngs_app.config.from_object(YoungsConfig)
+    youngs_app.config.from_pyfile(config_filepath, silent=True)
+    print_settings(youngs_app.config.iteritems())
 
     # 로그 초기화
-    from photolog.photolog_logger import Log
-    log_filepath = os.path.join(photolog_app.root_path,
-                                photolog_app.config['LOG_FILE_PATH'])
+    from youngs_server.youngs_logger import Log
+    log_filepath = os.path.join(youngs_app.root_path,
+                                youngs_app.config['LOG_FILE_PATH'])
     Log.init(log_filepath=log_filepath)
 
     # 데이터베이스 처리
