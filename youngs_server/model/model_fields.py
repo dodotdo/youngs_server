@@ -42,3 +42,10 @@ review_fields = {
 review_list_fields = {
     'results' : fields.List(fields.Nested(review_fields))
 }
+
+user_channel_fields = {
+    'userId' : fields.Integer,
+    'channelId' : fields.Integer,
+    'type' : fields.String,
+    'isListening' : fields.Boolean
+}

@@ -1,10 +1,12 @@
 import sys
 from youngs_server import create_app
+from flask import request
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
 application = create_app()
+
 
 if __name__ == '__main__':
     print "starting test server..."
