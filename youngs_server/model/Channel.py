@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
 
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Time
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Time, TIMESTAMP
 from sqlalchemy.orm import relationship
-from youngs_server.model import Base
-from youngs_server.model import User
+from youngs_server.model import Base, User
 
 
 class Channel(Base):
@@ -25,7 +24,8 @@ class Channel(Base):
     fileName = Column(String(400), unique=False)
     fileSize = Column(Integer, unique=False)
 
-    user = relationship('User', backref='channel')
+
+    user = relationship('User', backref='channel', cascade='save-update, delete')
 
     # id는 자동생성
     def __init__(self, title, description, teacherId, youtubeURL, isFree, teachingDay, teachingStartTime,

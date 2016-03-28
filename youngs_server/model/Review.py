@@ -4,7 +4,7 @@
 from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey, Boolean, Time
 from sqlalchemy.orm import relationship
 from youngs_server.model import Base
-from youngs_server.model import User
+from youngs_server.model import User, Channel
 
 
 class Review(Base):
@@ -14,19 +14,18 @@ class Review(Base):
     rate = Column(Float, unique=False)
     review = Column(String(500), unique=False)
     uploadDate = Column(Date, unique=False)
-    channelId = Column(Integer, unique=False)
-    teacherId = Column(Integer, unique=False)
+    channelId = Column(Integer, ForeignKey(Channel.channelId), unique=False)
 
-    user = relationship('User', backref='review')
+    user = relationship('User', backref='review', cascade='save-update, delete')
+    channel = relationship('Channel', backref='review', cascade='save-update, delete')
 
     # id는 자동생성
-    def __init__(self, userId, rate, review, uploadDate, channelId, teacherId):
+    def __init__(self, userId, rate, review, uploadDate, channelId):
         self.userId= userId
         self.rate = rate
         self.review = review
         self.uploadDate = uploadDate
         self.channelId = channelId
-        self.teacherId = teacherId
 
     def __repr__(self):
         return '<Channel %r>' % self.userId
