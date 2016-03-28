@@ -2,9 +2,6 @@
 
 import os
 from flask import Flask, render_template, request, url_for
-from rq import Queue
-from rq.job import Job
-from youngs_server.redis.worker import conn
 
 
 def print_settings(config):

@@ -5,15 +5,20 @@ from youngs_server.database import dbManager
 from youngs_server.model import model_fields
 from youngs_server.common.Util import timeToString
 from flask_restful import Resource, Api, reqparse, abort, marshal
-from flask import Blueprint
+from flask import Blueprint, request, session, current_app
 from youngs_server.model.Channel import Channel
+from youngs_server.common.decorator import token_required
 from pil import Image
-import HYP_Utils
+from werkzeug.utils import secure_filename
+from youngs_server.youngs_logger import Log
+import uuid, os
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 apiMakeChannel = Blueprint('channel', __name__, url_prefix='/api/makeChannel')
 makeChannelRest = Api(apiMakeChannel)
+
+ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png'])
 
 
 class MakeChannel(Resource):
@@ -86,30 +91,57 @@ class MakeChannel(Resource):
             location='json', type=str,
             help='limit count of person who listen Channel'
         )
-        self.make_channel_post_parser.add_argument(
-            'filename', dest='fileName',
-            location='json', type=str,
-            help='cover filename of channel'
-        )
-        self.make_channel_post_parser.add_argument(
-            'filesize', dest='fileSize',
-            location='json', type=int,
-            help='cover filesize of channel'
-        )
 
+    @token_required
     def post(self):
         """makeChannel"""
         args = self.make_channel_post_parser.parse_args()
 
+        """중복 채널 처리"""
         duplicateChannel = Channel.query.filter_by(title=args.title).first()
 
         if duplicateChannel is not None:
             return abort(401, message='duplicate channel title')
 
+        """사진 처리"""
         if args.coverImageFileNameOriginal is None:
-            coverImageFileNameOriginal = ''
+            coverImage = ''
         else:
-            coverImageFileNameOriginal = args.coverImageFileNameOriginal
+            coverImage = args.coverImageFileNameOriginal
+
+        filename = None
+        filesize = 0
+        filename_orig = coverImage.filename
+
+        try:
+            #: 파일 확장자 검사 : 현재 jpg, jpeg, png만 가능
+            if coverImage and ('.' in coverImage and coverImage.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS):
+
+                ext = (coverImage.filename).rsplit('.', 1)[1]
+
+                #: 업로드 폴더 위치는 얻는다.
+                upload_folder = \
+                    os.path.join(current_app.root_path,
+                                 current_app.config['UPLOAD_CHANNEL_COVER_FOLDER'])
+                #: 유일하고 안전한 파일명을 얻는다.
+                filename = \
+                    secure_filename(args.teacherId +
+                                    '_' +
+                                    unicode(uuid.uuid4()) +
+                                    "." +
+                                    ext)
+
+                coverImage.save(os.path.join(upload_folder,
+                                             filename))
+
+                filesize = os.stat(upload_folder + filename).st_size
+
+            else:
+                raise Exception("File upload error : illegal file.")
+
+        except Exception as e:
+            Log.error(str(e))
+            raise e
 
         channel = Channel(
             title=args.title,
@@ -122,9 +154,9 @@ class MakeChannel(Resource):
             teachingEndTime=args.teachingEndTime,
             price=args.price,
             listeningLimitCnt=args.listeningLimitCnt,
-            coverImageFileNameOriginal=coverImageFileNameOriginal,
-            fileName='',
-            fileSize=0
+            coverImageFileNameOriginal=filename_orig,
+            fileName=filename,
+            fileSize=filesize
         )
 
         dbManager.__session.add(channel)
@@ -134,3 +166,7 @@ class MakeChannel(Resource):
 
 
 makeChannelRest.add_resource(MakeChannel, '')
+
+
+def __allowed_file(filename):
+    return
