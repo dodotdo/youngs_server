@@ -40,8 +40,8 @@ def create_app(config_filepath='resource/config.cfg'):
 
     from youngs_server.api import *
 
-    from youngs_server.youngs_blueprint import youngs
-    youngs_app.register_blueprint(youngs)
+    #from youngs_server.youngs_blueprint import youngs
+    #youngs_app.register_blueprint(youngs)
 
     # SessionInterface 설정.
     # Redis를 이용한 세션 구현은 cache_session.RedisCacheSessionInterface 임포트하고
