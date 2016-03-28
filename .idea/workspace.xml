@@ -2,31 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ae5396f8-31b7-4be8-8bf9-27a9752cc19e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/youngs_server/api/changeChannelStatus/controllers.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/youngs_server/api/channelList/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/youngs_server/youngs_blueprint.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/lib/python2.7/site-packages/redis-2.10.5.dist-info/DESCRIPTION.rst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/lib/python2.7/site-packages/redis-2.10.5.dist-info/INSTALLER" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/lib/python2.7/site-packages/redis-2.10.5.dist-info/METADATA" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/lib/python2.7/site-packages/redis-2.10.5.dist-info/RECORD" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/lib/python2.7/site-packages/redis-2.10.5.dist-info/WHEEL" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/lib/python2.7/site-packages/redis-2.10.5.dist-info/metadata.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/lib/python2.7/site-packages/redis-2.10.5.dist-info/top_level.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/lib/python2.7/site-packages/redis/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/lib/python2.7/site-packages/redis/_compat.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/lib/python2.7/site-packages/redis/client.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/lib/python2.7/site-packages/redis/connection.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/lib/python2.7/site-packages/redis/exceptions.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/lib/python2.7/site-packages/redis/lock.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/lib/python2.7/site-packages/redis/sentinel.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/venv/lib/python2.7/site-packages/redis/utils.py" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/youngs_server/api/channel/__init__.py" afterPath="$PROJECT_DIR$/youngs_server/api/changeChannelStatus/__init__.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/youngs_server/api/channel/controllers.py" afterPath="$PROJECT_DIR$/youngs_server/api/channelList/controllers.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/youngs_server/api/ChannelInfo/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/youngs_server/api/ChannelInfo/controllers.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/youngs_server/api/VideoTime/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/youngs_server/api/VideoTime/controllers.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/youngs_server/model/VideoTime.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/requirements.txt" afterPath="$PROJECT_DIR$/requirements.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/runserver.py" afterPath="$PROJECT_DIR$/runserver.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/youngs_server/__init__.py" afterPath="$PROJECT_DIR$/youngs_server/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/youngs_server/model/UserChannel.py" afterPath="$PROJECT_DIR$/youngs_server/model/UserChannel.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/youngs_server/api/makeChannel/controllers.py" afterPath="$PROJECT_DIR$/youngs_server/api/makeChannel/controllers.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/youngs_server/model/Channel.py" afterPath="$PROJECT_DIR$/youngs_server/model/Channel.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/youngs_server/model/model_fields.py" afterPath="$PROJECT_DIR$/youngs_server/model/model_fields.py" />
     </list>
     <ignored path="youngs_server.iws" />
@@ -51,30 +35,20 @@
       <file leaf-file-name="Channel.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/youngs_server/model/Channel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.69201994">
+            <state vertical-scroll-proportion="0.74812967">
               <caret line="40" column="26" selection-start-line="40" selection-start-column="26" selection-end-line="40" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UserChannel.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/youngs_server/model/UserChannel.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="17" column="47" selection-start-line="13" selection-start-column="4" selection-end-line="17" selection-end-column="47" />
               <folding>
-                <element signature="e#26#93#0" expanded="true" />
+                <element signature="e#26#110#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="controllers.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/youngs_server/api/login/controllers.py">
+        <entry file="file://$PROJECT_DIR$/youngs_server/api/makeChannel/controllers.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="32" column="66" selection-start-line="31" selection-start-column="16" selection-end-line="32" selection-end-column="66" />
+              <caret line="40" column="9" selection-start-line="40" selection-start-column="9" selection-end-line="40" selection-end-column="9" />
               <folding>
                 <element signature="e#25#35#0" expanded="true" />
               </folding>
@@ -82,12 +56,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/youngs_server/api/__init__.py">
+      <file leaf-file-name="controllers.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/youngs_server/api/VideoTime/controllers.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
+              <caret line="21" column="12" selection-start-line="21" selection-start-column="12" selection-end-line="21" selection-end-column="12" />
+              <folding>
+                <element signature="e#25#35#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -96,7 +72,7 @@
         <entry file="file://$PROJECT_DIR$/youngs_server/api/changeChannelStatus/controllers.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+              <caret line="66" column="40" selection-start-line="66" selection-start-column="40" selection-end-line="68" selection-end-column="86" />
               <folding>
                 <element signature="e#25#35#0" expanded="true" />
               </folding>
@@ -108,17 +84,7 @@
         <entry file="file://$PROJECT_DIR$/youngs_server/model/model_fields.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="49" column="34" selection-start-line="49" selection-start-column="34" selection-end-line="49" selection-end-column="34" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Review.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/youngs_server/model/Review.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="16" column="76" selection-start-line="16" selection-start-column="76" selection-end-line="16" selection-end-column="76" />
+              <caret line="34" column="32" selection-start-line="34" selection-start-column="32" selection-end-line="34" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -128,29 +94,7 @@
         <entry file="file://$PROJECT_DIR$/youngs_server/api/signup/controllers.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="61" column="43" selection-start-line="49" selection-start-column="8" selection-end-line="61" selection-end-column="43" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="controllers.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/youngs_server/api/channelList/controllers.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="25" column="63" selection-start-line="25" selection-start-column="63" selection-end-line="25" selection-end-column="63" />
-              <folding>
-                <element signature="e#25#35#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pubkey.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/venv/lib/python2.7/site-packages/Crypto/PublicKey/pubkey.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="142" column="11" selection-start-line="142" selection-start-column="11" selection-end-line="142" selection-end-column="11" />
+              <caret line="37" column="39" selection-start-line="37" selection-start-column="39" selection-end-line="37" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -182,13 +126,10 @@
         <option value="$PROJECT_DIR$/youngs_server/common/__init__.py" />
         <option value="$PROJECT_DIR$/youngs_server/api/makeChannel/__init__.py" />
         <option value="$PROJECT_DIR$/youngs_server/api/signup/controllers.py" />
-        <option value="$PROJECT_DIR$/youngs_server/common/Util.py" />
         <option value="$PROJECT_DIR$/youngs_server/common/decorator.py" />
         <option value="$PROJECT_DIR$/youngs_server/api/login/login_module.py" />
         <option value="$PROJECT_DIR$/youngs_server/youngs_config.py" />
         <option value="$PROJECT_DIR$/youngs_server/model/User.py" />
-        <option value="$PROJECT_DIR$/youngs_server/model/Channel.py" />
-        <option value="$PROJECT_DIR$/youngs_server/api/makeChannel/controllers.py" />
         <option value="$PROJECT_DIR$/youngs_server/model/Review.py" />
         <option value="$PROJECT_DIR$/youngs_server/api/login/controllers.py" />
         <option value="$PROJECT_DIR$/youngs_server/api/review/controllers.py" />
@@ -204,8 +145,14 @@
         <option value="$PROJECT_DIR$/youngs_server/api/listen/controllers.py" />
         <option value="$PROJECT_DIR$/youngs_server/api/channelList/controllers.py" />
         <option value="$PROJECT_DIR$/youngs_server/model/UserChannel.py" />
-        <option value="$PROJECT_DIR$/youngs_server/model/model_fields.py" />
         <option value="$PROJECT_DIR$/youngs_server/api/changeChannelStatus/controllers.py" />
+        <option value="$PROJECT_DIR$/youngs_server/api/ChannelInfo/controllers.py" />
+        <option value="$PROJECT_DIR$/youngs_server/model/Channel.py" />
+        <option value="$PROJECT_DIR$/youngs_server/common/Util.py" />
+        <option value="$PROJECT_DIR$/youngs_server/model/VideoTime.py" />
+        <option value="$PROJECT_DIR$/youngs_server/model/model_fields.py" />
+        <option value="$PROJECT_DIR$/youngs_server/api/VideoTime/controllers.py" />
+        <option value="$PROJECT_DIR$/youngs_server/api/makeChannel/controllers.py" />
       </list>
     </option>
   </component>
@@ -479,6 +426,50 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="youngs_server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="youngs_server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="youngs_server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="api" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="VideoTime" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="youngs_server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="youngs_server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="youngs_server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="api" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ChannelInfo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scratches" />
@@ -697,14 +688,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/youngs_server/model/Channel.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="24" column="48" selection-start-line="24" selection-start-column="48" selection-end-line="24" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/youngs_server/api/review/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -718,7 +701,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#25#35#0" expanded="true" />
+            <element signature="e#25#35#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -728,7 +711,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="114" column="37" selection-start-line="114" selection-start-column="37" selection-end-line="114" selection-end-column="37" />
           <folding>
-            <element signature="e#25#35#0" expanded="false" />
+            <element signature="e#25#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -873,13 +856,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/youngs_server/common/Util.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="36" selection-start-line="0" selection-start-column="36" selection-end-line="0" selection-end-column="36" />
           <folding />
         </state>
       </provider>
@@ -979,14 +955,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/runserver.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1002,16 +970,6 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/youngs_server/api/makeChannel/controllers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="130" column="64" selection-start-line="130" selection-start-column="64" selection-end-line="130" selection-end-column="64" />
-          <folding>
-            <element signature="e#25#35#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1031,10 +989,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/youngs_server/api/signup/controllers.py">
+    <entry file="file://$PROJECT_DIR$/youngs_server/api/ChannelInfo/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="61" column="43" selection-start-line="49" selection-start-column="8" selection-end-line="61" selection-end-column="43" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/youngs_server/api/login/controllers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.59850377">
+          <caret line="32" column="66" selection-start-line="31" selection-start-column="16" selection-end-line="32" selection-end-column="66" />
+          <folding>
+            <element signature="e#25#35#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/youngs_server/api/channelList/controllers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="28" column="19" selection-start-line="28" selection-start-column="19" selection-end-line="28" selection-end-column="19" />
+          <folding>
+            <element signature="e#25#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/youngs_server/api/VideoTime/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1047,22 +1033,46 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/youngs_server/api/channelList/controllers.py">
+    <entry file="file://$PROJECT_DIR$/youngs_server/api/signup/controllers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="25" column="63" selection-start-line="25" selection-start-column="63" selection-end-line="25" selection-end-column="63" />
+          <caret line="37" column="39" selection-start-line="37" selection-start-column="39" selection-end-line="37" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/youngs_server/api/changeChannelStatus/controllers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="66" column="40" selection-start-line="66" selection-start-column="40" selection-end-line="68" selection-end-column="86" />
           <folding>
             <element signature="e#25#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/youngs_server/common/Util.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="22" column="19" selection-start-line="22" selection-start-column="19" selection-end-line="22" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/youngs_server/model/UserChannel.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="47" selection-start-line="13" selection-start-column="4" selection-end-line="17" selection-end-column="47" />
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/youngs_server/model/VideoTime.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
           <folding>
-            <element signature="e#26#93#0" expanded="true" />
+            <element signature="e#26#85#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1070,25 +1080,43 @@
     <entry file="file://$PROJECT_DIR$/youngs_server/model/model_fields.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="49" column="34" selection-start-line="49" selection-start-column="34" selection-end-line="49" selection-end-column="34" />
+          <caret line="34" column="32" selection-start-line="34" selection-start-column="32" selection-end-line="34" selection-end-column="32" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/youngs_server/api/login/controllers.py">
+    <entry file="file://$PROJECT_DIR$/youngs_server/api/makeChannel/controllers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="32" column="66" selection-start-line="31" selection-start-column="16" selection-end-line="32" selection-end-column="66" />
+          <caret line="40" column="9" selection-start-line="40" selection-start-column="9" selection-end-line="40" selection-end-column="9" />
           <folding>
             <element signature="e#25#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/youngs_server/api/changeChannelStatus/controllers.py">
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/youngs_server/api/VideoTime/controllers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="21" column="12" selection-start-line="21" selection-start-column="12" selection-end-line="21" selection-end-column="12" />
+          <folding>
+            <element signature="e#25#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/youngs_server/api/ChannelInfo/controllers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6546135">
+          <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
           <folding>
             <element signature="e#25#35#0" expanded="true" />
           </folding>
@@ -1097,9 +1125,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/youngs_server/model/Channel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.69201994">
+        <state vertical-scroll-proportion="0.74812967">
           <caret line="40" column="26" selection-start-line="40" selection-start-column="26" selection-end-line="40" selection-end-column="26" />
-          <folding />
+          <folding>
+            <element signature="e#26#110#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

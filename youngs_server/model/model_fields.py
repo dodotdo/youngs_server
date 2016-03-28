@@ -27,6 +27,14 @@ channel_fields = {
     'fileSize' : fields.Integer
 }
 
+video_time_fields = {
+    'teacherId' : fields.Integer,
+    'channelId' : fields.Integer,
+    'nowYoutubeTime' : fields.timegm(),
+    'updatedTime' : fields.timegm(),
+    'isPlaying' : fields.Boolean
+}
+
 channel_list_fields = {
     'results': fields.List(fields.Nested(channel_fields))
 }
