@@ -10,11 +10,11 @@ from youngs_server.model import User, Channel
 class Review(Base):
     __tablename__ = 'review'
 
-    userId = Column(Integer, ForeignKey(User.userId))
+    userId = Column(Integer, ForeignKey('user.userId'))
     rate = Column(Float)
     review = Column(Text)
     uploadDate = Column(Date)
-    channelId = Column(Integer, ForeignKey(Channel.channelId), primary_key=True)
+    channelId = Column(Integer, ForeignKey('channel.channelId'), primary_key=True)
 
     user = relationship('User', backref='review', cascade='save-update, delete')
     channel = relationship('Channel', backref='review', cascade='save-update, delete')

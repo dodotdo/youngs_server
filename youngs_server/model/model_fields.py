@@ -30,8 +30,8 @@ channel_fields = {
 video_time_fields = {
     'teacherId' : fields.Integer,
     'channelId' : fields.Integer,
-    'nowYoutubeTime' : fields.timegm(),
-    'updatedTime' : fields.timegm(),
+    'nowYoutubeTime' : fields.timegm,
+    'updatedTime' : fields.timegm,
     'isPlaying' : fields.Boolean
 }
 

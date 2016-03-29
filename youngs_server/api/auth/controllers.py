@@ -11,8 +11,8 @@ from youngs_server.common.decorator import token_required
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
-authApi = Blueprint('loginOut', __name__, url_prefix='/api/auth')
-authRest = Api(authApi)
+apiAuth = Blueprint('loginOut', __name__, url_prefix='/api/auth')
+authRest = Api(apiAuth)
 
 class loginout(Resource) :
     def __init__(self):

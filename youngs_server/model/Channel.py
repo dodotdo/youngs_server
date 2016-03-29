@@ -12,7 +12,7 @@ class Channel(Base):
     channelId = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(30))
     description = Column(Text)
-    teacherId = Column(Integer, ForeignKey(User.userId))
+    teacherId = Column(Integer, ForeignKey('user.userId'))
     youtubeURL = Column(String(100))
     isFree = Column(Boolean)
     teachingDay = Column(Integer)

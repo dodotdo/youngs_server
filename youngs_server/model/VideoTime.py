@@ -8,8 +8,8 @@ from youngs_server.model import Base, User, Channel
 class VideoTime(Base):
     __tablename__ = 'video'
 
-    teacherId = Column(Integer, ForeignKey=(User.userId), primary_key=True)
-    channelId = Column(Integer, ForeignKey=(Channel.channelId), primary_key=True)
+    teacherId = Column(Integer, ForeignKey=('user.userId'), primary_key=True)
+    channelId = Column(Integer, ForeignKey=('channel.channelId'), primary_key=True)
     nowYoutubeTime = Column(Time)
     updatedTime = Column(Time)
     isPlaying = Column(Boolean)

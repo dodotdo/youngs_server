@@ -11,8 +11,8 @@ class UserChannel(Base):
     __tablename__ = 'userChannel'
 
     num = Column(Integer, autoincrement=True, primary_key=True)
-    userId = Column(Integer, ForeignKey(User.userId))
-    channelId = Column(Integer, ForeignKey(Channel.channelId))
+    userId = Column(Integer, ForeignKey('user.userId'))
+    channelId = Column(Integer, ForeignKey('channel.channelId'))
     #d - default, f-favorite, r-read, fr-favorite&read
     type = Column(String)
     isListening = Column(Boolean)
