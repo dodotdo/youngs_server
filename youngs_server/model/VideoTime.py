@@ -8,18 +8,12 @@ from youngs_server.model import Base, User, Channel
 class VideoTime(Base):
     __tablename__ = 'video'
 
-    teacherId = Column(Integer, ForeignKey=(User.userId))
-    channelId = Column(Integer, ForeignKey=(Channel.channelId))
-    nowYoutubeTime = Column(Time, unique=False)
-    updatedTime = Column(Time, unique=False)
-    isPlaying = Column(Boolean, unique=False)
+    teacherId = Column(Integer, ForeignKey=(User.userId), primary_key=True)
+    channelId = Column(Integer, ForeignKey=(Channel.channelId), primary_key=True)
+    nowYoutubeTime = Column(Time)
+    updatedTime = Column(Time)
+    isPlaying = Column(Boolean)
 
     channel = relationship('Channel', backref='video', cascade='save-update, delete')
     teacher = relationship('User', backref='video', cascade='save-update, delete')
-
-    def __init__(self, channelId, nowYoutubeTime, updatedTime, isPlaying):
-        self.channelId = channelId
-        self.nowYoutubeTime = nowYoutubeTime
-        self.updatedTime = updatedTime
-        self.isPlaying = isPlaying
 

@@ -3,40 +3,64 @@
 import sys
 from youngs_server.database import dbManager
 from youngs_server.model import model_fields
-from flask_restful import Resource, Api, reqparse, abort, marshal
-from flask import Blueprint, session, request
+from flask_restful import Resource, reqparse, marshal
+from flask import session, request
 from youngs_server.model.Review import Review
 from youngs_server.common.decorator import token_required
+from youngs_server.common.Util import dateToString
+from youngs_server.api.channel.controllers import channelRest
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
-api = Blueprint('review', __name__, url_prefix='/api/')
 
 
-@token_required
-@api.route('review')
-def postReview(self):
-    if request.method == 'POST':
-        reviewObj = Review(
-            userId=session['userId'],
-            rate=request.json.get('rate'),
-            review=request.json.get('review'),
-            uploadDate=request.json.get('upload_date'),
-            channelId=request.json.get('channel_id')
+class Review(Resource):
+    def __init__(self):
+        self.review_post_parser = reqparse.RequestParser()
+        self.review_post_parser.add_argument(
+            'rate', dest='rate',
+            location='json', required=True,
+            type=float,
+            help='review rate'
+        )
+        self.review_post_parser.add_argument(
+            'review', dest='review',
+            location='json', required=True,
+            type=str,
+            help='review'
+        )
+        self.review_post_parser.add_argument(
+            'upload_date', dest='uploadDate',
+            location='json', required=True,
+            type=dateToString,
+            help='review upload date'
         )
 
-        dbManager.__session.add(reviewObj)
-        dbManager.__session.commit()
+    @token_required
+    def post(self, channelId):
+        """ save review """
+        args = self.review_post_parser.parse_args()
+        reviewObj = Review(
+            userId=session['userId'],
+            rate=args.rate,
+            review=args.review,
+            uploadDate=args.uploadDate,
+            channelId=channelId
+        )
+
+        dbManager.add(reviewObj)
+        dbManager.commit()
 
         return marshal({'results': reviewObj}, model_fields.review_fields)
 
 
-@api.route('review')
-def getReviewList(self):
-    """ return channel list depending on type"""
+    @token_required
+    def get(self, channelId):
+        """ return review list depending on channel"""
 
-    if request.method == 'GET':
-        channelId = request.args.get('channel_id')
-        reviewList = dbManager.__session.query(Review).filter(channelId=channelId).all()
+        channelId = channelId
+        reviewList = dbManager.query(Review).filter(channelId=channelId).all()
 
         return marshal({'results': reviewList}, model_fields.review_list_fields)
+
+channelRest.add_resource(Review, '<channel_id>/review')

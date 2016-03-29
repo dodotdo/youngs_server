@@ -1,28 +1,26 @@
 # -*- coding: utf-8 -*-
 
-import sys
+import sys, os, uuid
 from youngs_server.database import dbManager
 from youngs_server.model import model_fields
-from youngs_server.common.Util import timeToString
 from flask_restful import Resource, Api, reqparse, abort, marshal
-from flask import Blueprint, request, session, current_app
-from youngs_server.model.Channel import Channel
+from flask import Blueprint, session, current_app, request
+from youngs_server.model import UserChannel, Channel
 from youngs_server.common.decorator import token_required
-from pil import Image
-from werkzeug.utils import secure_filename
+from youngs_server.common.Util import timeToString
 from youngs_server.youngs_logger import Log
-import uuid, os
+from werkzeug.utils import secure_filename
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
-apiMakeChannel = Blueprint('channel', __name__, url_prefix='/api/makeChannel')
-makeChannelRest = Api(apiMakeChannel)
+apiChannel = Blueprint('channel', __name__, url_prefix='/api/channels')
+channelRest = Api(apiChannel)
 
 ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png'])
 
 
-class MakeChannel(Resource):
-    # 채널만들기 api
+class Channels(Resource):
+    # 채널 api
 
     def __init__(self):
         self.make_channel_post_parser = reqparse.RequestParser()
@@ -93,12 +91,22 @@ class MakeChannel(Resource):
         )
 
     @token_required
+    def get(self):
+        """ return channel list depending on type"""
+
+        userId = session['userId']
+        type = request.args.get('type')
+        channelList = dbManager.query(UserChannel).filter(userId=userId, type=type).all()
+
+        return marshal({'results': channelList}, model_fields.channel_list_fields)
+
+    @token_required
     def post(self):
         """makeChannel"""
         args = self.make_channel_post_parser.parse_args()
 
         """중복 채널 처리"""
-        duplicateChannel = Channel.query.filter_by(title=args.title).first()
+        duplicateChannel = dbManager.query(Channel).filter_by(title=args.title).first()
 
         if duplicateChannel is not None:
             return abort(401, message='duplicate channel title')
@@ -159,14 +167,65 @@ class MakeChannel(Resource):
             fileSize=filesize
         )
 
-        dbManager.__session.add(channel)
-        dbManager.__session.commit()
+        dbManager.add(channel)
+        dbManager.commit()
 
         return marshal(channel, model_fields.channel_fields, envelope='results')
 
 
-makeChannelRest.add_resource(MakeChannel, '')
+class Channel(Resource):
+
+    def get(self, channelId):
+        """ return channel information"""
+
+        channel = dbManager.query(Channel).filter(channelId=channelId).first()
+
+        if channel is None:
+            return abort(401, message='channelId is not valid')
+
+        return marshal({'results': channel}, model_fields.channel_fields)
 
 
-def __allowed_file(filename):
-    return
+class ChannelStatus(Resource):
+    def __init__(self):
+        self.channel_status_post_parser = reqparse.RequestParser()
+        self.channel_status_post_parser.add_argument(
+            'type', dest='type',
+            location='json', required=True,
+            type=str,
+            help='type of the channel'
+        )
+
+
+    @token_required
+    def put(self, channelId):
+        """channel status change"""
+
+        userId = session['userId']
+        args = self.channel_status_post_parser.parse_args()
+        type = args.type
+        userChannelModel = UserChannel(
+            userId = userId,
+            channelId = channelId,
+            type = args.type,
+            isListening = False
+        )
+
+        nowListeningChannel = dbManager.query(UserChannel).filter(userId = userId, channelId = channelId).first()
+
+        if nowListeningChannel is None :
+            """디비에 없는 경우"""
+            dbManager.add(userChannelModel)
+        else :
+            """디비에 있는 경우"""
+            nowListeningChannel.type = type
+
+        dbManager.commit()
+
+        return marshal({'results': userChannelModel}, model_fields.user_channel_fields)
+
+
+
+channelRest.add_resource(Channels, '')
+channelRest.add_resource(Channel,'<channel_id>')
+channelRest.add_resource(ChannelStatus, '<channel_id>/status')
