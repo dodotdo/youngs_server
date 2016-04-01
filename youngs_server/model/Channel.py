@@ -3,10 +3,11 @@
 
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, Time, Text
 from sqlalchemy.orm import relationship
-from youngs_server.model import Base, User
+from youngs_server.model import user
+from youngs_server.database import db
 
 
-class Channel(Base):
+class Channel(db.Model):
     __tablename__ = 'channel'
 
     channelId = Column(Integer, primary_key=True, autoincrement=True)
@@ -16,8 +17,8 @@ class Channel(Base):
     youtubeURL = Column(String(100))
     isFree = Column(Boolean)
     teachingDay = Column(Integer)
-    teachingStartTime = Column(Time)
-    teachingEndTime = Column(Time)
+    teachingStartTime = Column(String)
+    teachingEndTime = Column(String)
     price = Column(Integer)
     listeningLimitCnt = Column(Integer)
     coverImageFileNameOriginal = Column(Text)

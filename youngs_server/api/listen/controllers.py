@@ -1,12 +1,12 @@
 import sys
-from youngs_server.database import dbManager
+from youngs_server.database import db
 from youngs_server.model import model_fields
-from flask_restful import Resource, Api, reqparse, abort, marshal
-from flask import Blueprint, session, request, jsonify
-from youngs_server.model.UserChannel import UserChannel
+from flask_restful import Resource, marshal, Api
+from flask import session, jsonify
+from youngs_server.model.user_channel import UserChannel
+from youngs_server.model.channel import Channel
 from youngs_server.common.decorator import token_required
 from youngs_server.youngs_logger import Log
-from youngs_server.api.channel.controllers import channelRest
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -15,52 +15,54 @@ class Listen(Resource):
 
 
     @token_required
-    def put(self, channelId):
-        """ 수업듣기
+    def put(self, channel_id):
+        """ listen channel
         """
         userId = session['userId']
 
         userChannelModel = UserChannel(
             userId = userId,
-            channelId = channelId,
+            channelId = channel_id,
             type = 'd',
             isListening = True
         )
 
-        listeningChannel = dbManager.query(UserChannel).filter(userId = userId, isListening = True).first()
+        listeningChannel = db.session.query(UserChannel).filter_by(userId = userId, isListening = True).first()
 
-        #다른방송을 듣고 있는경우
+        #if user listen another channel
         if listeningChannel is not None :
             listeningChannel.isListening = False
 
-        willListenChannel = dbManager.query(UserChannel).filter(userId=userId, channelId = channelId).first()
+        willListenChannel = db.session.query(UserChannel).filter_by(userId=userId, channelId = channel_id).first()
 
-        #db에 없는 경우
+        #if user_channel is not exist
         if willListenChannel is None :
-            dbManager.add(userChannelModel)
+            #if channel is exist
+            channel = db.session.query(Channel).filter_by(channelId = channel_id).first()
+            if channel is not None :
+                db.session.add(userChannelModel)
+            else :
+                return jsonify({'message': 'doesn`t exist'})
         else :
             willListenChannel.isListening = True
 
-        dbManager.commit()
+        db.session.commit()
 
-        return marshal({'results': userChannelModel}, model_fields.user_channel_fields)
-
+        return marshal(userChannelModel, model_fields.user_channel_fields, envelope='results')
 
     @token_required
-    def delete(self, channelId):
-        """수업나가기"""
+    def delete(self, channel_id):
+        """listen out"""
         userId = session['userId']
 
-        nowListeningChannel = dbManager.query(UserChannel).filter(userId = userId, isListening = True, channelId = channelId).first()
+        nowListeningChannel = db.session.query(UserChannel).filter_by(userId = userId, isListening = True, channelId = channel_id).first()
 
-        #수업을 듣고 있지 않은 경우 디비에 없는 경우
+        #if user has not listen and channel is not exist
         if nowListeningChannel is None :
             Log.error('already not listening or doesn`t exist')
-            return jsonify({'message': 'already not listening or doesn`t exist'}), 400
+            return jsonify({'message': 'already not listening or doesn`t exist'})
 
-        nowListeningChannel.isListening = True
-        dbManager.commit()
+        nowListeningChannel.isListening = False
+        db.session.commit()
 
         return jsonify({'result': 'listen out success'})
-
-channelRest.add_resource(Listen, '<channel_id>/listen')

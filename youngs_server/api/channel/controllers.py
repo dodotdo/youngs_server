@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 
-import sys, os, uuid
-from youngs_server.database import dbManager
+import sys
+from youngs_server.database import db
 from youngs_server.model import model_fields
 from flask_restful import Resource, Api, reqparse, abort, marshal
-from flask import Blueprint, session, current_app, request
-from youngs_server.model import UserChannel, Channel
+from flask import Blueprint, session, request, jsonify
+from youngs_server.model.channel import Channel
+from youngs_server.model.user_channel import UserChannel
 from youngs_server.common.decorator import token_required
-from youngs_server.common.Util import timeToString
+from youngs_server.api.listen.controllers import Listen
+from youngs_server.api.review.controllers import ReviewInfo
+from youngs_server.api.video.controllers import VideoTimeInfo
 from youngs_server.youngs_logger import Log
-from werkzeug.utils import secure_filename
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -63,13 +65,13 @@ class Channels(Resource):
         self.make_channel_post_parser.add_argument(
             'teaching_start_time', dest='teachingStartTime',
             location='json', required=True,
-            type=timeToString,
+            type=str,
             help='teachingStartTime of Channel'
         )
         self.make_channel_post_parser.add_argument(
             'teaching_end_time', dest='teachingEndTime',
             location='json', required=True,
-            type=timeToString,
+            type=str,
             help='teachingEndTime of Channel'
         )
         self.make_channel_post_parser.add_argument(
@@ -96,7 +98,11 @@ class Channels(Resource):
 
         userId = session['userId']
         type = request.args.get('type')
-        channelList = dbManager.query(UserChannel).filter(userId=userId, type=type).all()
+        channelList = db.session.query(UserChannel).filter_by(userId=userId, type=type).all()
+
+        if channelList == [] :
+            return jsonify({'message': 'channel is not exist'})
+
 
         return marshal({'results': channelList}, model_fields.channel_list_fields)
 
@@ -106,20 +112,23 @@ class Channels(Resource):
         args = self.make_channel_post_parser.parse_args()
 
         """중복 채널 처리"""
-        duplicateChannel = dbManager.query(Channel).filter_by(title=args.title).first()
+        duplicateChannel = db.session.query(Channel).filter_by(title=args.title).first()
 
         if duplicateChannel is not None:
             return abort(401, message='duplicate channel title')
 
         """사진 처리"""
-        if args.coverImageFileNameOriginal is None:
+
+        """
+        if args.coverImageFileNameOriginal is "":
             coverImage = ''
+            filename_orig = ""
         else:
             coverImage = args.coverImageFileNameOriginal
+            filename_orig = coverImage.filename
 
         filename = None
         filesize = 0
-        filename_orig = coverImage.filename
 
         try:
             #: 파일 확장자 검사 : 현재 jpg, jpeg, png만 가능
@@ -142,6 +151,7 @@ class Channels(Resource):
                 coverImage.save(os.path.join(upload_folder,
                                              filename))
 
+
                 filesize = os.stat(upload_folder + filename).st_size
 
             else:
@@ -150,6 +160,7 @@ class Channels(Resource):
         except Exception as e:
             Log.error(str(e))
             raise e
+        """
 
         channel = Channel(
             title=args.title,
@@ -162,28 +173,28 @@ class Channels(Resource):
             teachingEndTime=args.teachingEndTime,
             price=args.price,
             listeningLimitCnt=args.listeningLimitCnt,
-            coverImageFileNameOriginal=filename_orig,
-            fileName=filename,
-            fileSize=filesize
+            coverImageFileNameOriginal="",
+            fileName="",
+            fileSize=0
         )
 
-        dbManager.add(channel)
-        dbManager.commit()
+        db.session.add(channel)
+        db.session.commit()
 
         return marshal(channel, model_fields.channel_fields, envelope='results')
 
 
-class Channel(Resource):
+class ChannelInfo(Resource):
 
-    def get(self, channelId):
+    def get(self, channel_id):
         """ return channel information"""
 
-        channel = dbManager.query(Channel).filter(channelId=channelId).first()
+        channel = db.session.query(Channel).filter_by(channelId=channel_id).first()
 
         if channel is None:
             return abort(401, message='channelId is not valid')
 
-        return marshal({'results': channel}, model_fields.channel_fields)
+        return marshal(channel, model_fields.channel_fields, envelope='results')
 
 
 class ChannelStatus(Resource):
@@ -198,7 +209,7 @@ class ChannelStatus(Resource):
 
 
     @token_required
-    def put(self, channelId):
+    def put(self, channel_id):
         """channel status change"""
 
         userId = session['userId']
@@ -206,26 +217,34 @@ class ChannelStatus(Resource):
         type = args.type
         userChannelModel = UserChannel(
             userId = userId,
-            channelId = channelId,
+            channelId = channel_id,
             type = args.type,
             isListening = False
         )
 
-        nowListeningChannel = dbManager.query(UserChannel).filter(userId = userId, channelId = channelId).first()
-
+        nowListeningChannel = db.session.query(UserChannel).filter_by(userId = userId, channelId = channel_id).first()
         if nowListeningChannel is None :
             """디비에 없는 경우"""
-            dbManager.add(userChannelModel)
+
+            channel = db.session.query(Channel).filter_by(channelId=channel_id).first()
+            #관계는 형성되지 않았지만 채널은 존재하는 경우 관계추가
+            if channel is not None :
+                db.session.add(userChannelModel)
+            else :
+                return jsonify({'result': 'doesn`t exist channel'})
         else :
             """디비에 있는 경우"""
             nowListeningChannel.type = type
 
-        dbManager.commit()
+        db.session.commit()
 
-        return marshal({'results': userChannelModel}, model_fields.user_channel_fields)
+        return marshal(userChannelModel, model_fields.user_channel_fields, envelope='results')
 
 
 
 channelRest.add_resource(Channels, '')
-channelRest.add_resource(Channel,'<channel_id>')
-channelRest.add_resource(ChannelStatus, '<channel_id>/status')
+channelRest.add_resource(ChannelInfo, '/<channel_id>')
+channelRest.add_resource(ChannelStatus, '/<channel_id>/status')
+channelRest.add_resource(Listen, '/<channel_id>/listenstatus')
+channelRest.add_resource(ReviewInfo, '/<channel_id>/review')
+channelRest.add_resource(VideoTimeInfo, '/<channel_id>/videotime')

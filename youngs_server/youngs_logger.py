@@ -25,7 +25,7 @@ class Log:
                                                          'warn'))
 
         formatter = \
-            Formatter('%(asctime)s - %(levelname)s - %(message)s')
+            Formatter('@@@@@@@%(asctime)s - %(levelname)s - %(message)s@@@@@@@@')
 
         console_handler = logging.StreamHandler()
         console_handler.setFormatter(formatter)

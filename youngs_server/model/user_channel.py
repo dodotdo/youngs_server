@@ -3,11 +3,9 @@
 
 from sqlalchemy import Column, Integer, ForeignKey, Boolean, String
 from sqlalchemy.orm import relationship
-from youngs_server.model import Base
-from youngs_server.model import User
-from youngs_server.model import Channel
+from youngs_server.database import db
 
-class UserChannel(Base):
+class UserChannel(db.Model):
     __tablename__ = 'userChannel'
 
     num = Column(Integer, autoincrement=True, primary_key=True)

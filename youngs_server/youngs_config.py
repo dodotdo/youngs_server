@@ -2,9 +2,9 @@
 
 class YoungsConfig(object):
     #: 데이터베이스 연결 URL
-    DB_URL= 'sqlite:///'
+    SQLALCHEMY_DATABASE_URI= 'sqlite:////tmp/youngs.db'
     #: 데이터베이스 파일 경로
-    DB_FILE_PATH= 'resource/database/youngs'
+    DB_FILE_PATH= 'resource/database/youngs.db'
     #: 사진 업로드 시 사진이 임시로 저장되는 임시 폴더
     TMP_FOLDER = 'resource/tmp/'
     #: 업로드 완료된 사진 파일이 저장되는 폴더

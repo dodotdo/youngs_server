@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from youngs_server.database import dbManager
+from youngs_server.database import db
 from youngs_server.model import model_fields
 from flask_restful import Resource, Api, reqparse, abort, marshal
 from flask import Blueprint, session
-from youngs_server.model.User import User
+from youngs_server.model.user import User
 from youngs_server.common.decorator import token_required
 
 reload(sys)
@@ -14,7 +14,7 @@ apiUser = Blueprint('user', __name__, url_prefix='/api/users')
 userRest = Api(apiUser)
 
 
-class User(Resource):
+class UserInfo(Resource):
     #회원가입 api
 
     def __init__(self):
@@ -32,7 +32,7 @@ class User(Resource):
             help='nickname of the user'
         )
         self.user_post_parser.add_argument(
-            'password', dest='pw',
+            'password', dest='password',
             location='json', required=True,
             type=str,
             help='password of the user'
@@ -42,14 +42,13 @@ class User(Resource):
         """signup"""
         args = self.user_post_parser.parse_args()
 
-        duplicateUser = dbManager.query.filter_by(nickname=args.nickname).first()
+        duplicateUser = db.session.query(User).filter_by(nickname=args.nickname).first()
 
         if duplicateUser is not None:
             return abort(401, message='duplicate user')
 
         signupUser = User(
                 email=args.email,
-                password = self.hash_password(args.pw),
                 nickname = args.nickname,
                 imageFileNameOriginal = None,
                 fileName = None,
@@ -58,9 +57,10 @@ class User(Resource):
                 point = 0,
                 teachingClassCnt = 0
         )
+        signupUser.hash_password(args.password)
 
-        dbManager.add(signupUser)
-        dbManager.commit()
+        db.session.add(signupUser)
+        db.session.commit()
 
         return marshal(signupUser, model_fields.user_fields, envelope='results')
 
@@ -70,11 +70,11 @@ class User(Resource):
 
         userId = session['userId']
 
-        userInfo = dbManager.query.filter_by(userId=userId).first()
+        userInfo = db.session.query(User).filter_by(userId=userId).first()
 
         if userInfo is None:
             return abort(402, message="invalid user id")
 
         return marshal(userInfo, model_fields.user_fields, envelope='results')
 
-userRest.add_resource(User, '')
+userRest.add_resource(UserInfo, '')

@@ -17,7 +17,7 @@ def dateToString(datetime_str):
 def timeToString(time_str):
     """ dump string of today's datetime to datetime object"""
     try:
-        return time.strptime(time_str, "%h:%m")
+        return time.strptime(time_str, "%h:%m").time()
     except Exception as e:
         print e.message
         return None

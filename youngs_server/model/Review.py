@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 
 
-from sqlalchemy import Column, Integer, Float, Date, ForeignKey, Text
+from sqlalchemy import Column, Integer, Float, Date, ForeignKey, Text, String
 from sqlalchemy.orm import relationship
-from youngs_server.model import Base
-from youngs_server.model import User, Channel
+from youngs_server.database import db
 
 
-class Review(Base):
+class Review(db.Model):
     __tablename__ = 'review'
 
+    reviewId = Column(Integer, primary_key=True)
     userId = Column(Integer, ForeignKey('user.userId'))
     rate = Column(Float)
     review = Column(Text)
-    uploadDate = Column(Date)
-    channelId = Column(Integer, ForeignKey('channel.channelId'), primary_key=True)
+    uploadDate = Column(String)
+    channelId = Column(Integer, ForeignKey('channel.channelId'))
 
     user = relationship('User', backref='review', cascade='save-update, delete')
     channel = relationship('Channel', backref='review', cascade='save-update, delete')

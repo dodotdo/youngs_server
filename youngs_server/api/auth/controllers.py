@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from youngs_server.database import dbManager
+from youngs_server.database import db
 from youngs_server.model import model_fields
 from flask_restful import Resource, Api, reqparse, abort, marshal
-from flask import Blueprint, session, jsonify, current_app, request
-from youngs_server.model.User import User
+from flask import Blueprint, jsonify, request, session
+from youngs_server.model.user import User
 from youngs_server.youngs_logger import Log
 from youngs_server.common.decorator import token_required
 
@@ -38,26 +38,24 @@ class loginout(Resource) :
         requestEmail = args.email
         requestPassword = args.password
 
-        user = dbManager.query(User).filter_by(email=requestEmail).first()
+        user = db.session.query(User).filter_by(email=requestEmail).first()
 
-        if user is not None:
+        if user is None:
             Log.error('invalid email')
             return abort(401, message='unregisted user or invalid email')
 
         try:
             if not user.verify_password(requestPassword):
                 Log.error('wrong password')
-                return jsonify({'message': 'wrong password'}), 400
+                return jsonify({'result':'wrong password'})
         except:
             Log.error('login error')
+            return jsonify({'result': 'login error'})
 
         token = user.generate_auth_token()
 
-        session_ttl = int(current_app.config['SESSION_ALIVE_MINUTES'] * 60)
-        p = current_app.r.pipeline()
-
-        # logger : user login
-        Log.info('login', user.userId + '/' + token)
+        session['token']=token
+        session['userId']=user.userId
 
         return marshal(user, model_fields.user_fields, envelope='results')
 
@@ -68,11 +66,10 @@ class loginout(Resource) :
 
         if token is None:
             Log.error('token is None')
-            return jsonify({'message': 'token is None'}), 400
+            return jsonify({'message': 'token is None'})
 
-        token = token[6:]
-        if current_app.r.get(token) is not None:
-            current_app.r.delete(token)
+        session['token']=None
+        session['userId']=None
 
         return jsonify({'result': 'logout success'})
 

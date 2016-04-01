@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from youngs_server.database import dbManager
+from youngs_server.database import db
 from youngs_server.model import model_fields
 from flask_restful import Resource, reqparse, marshal
 from flask import jsonify, session
-from youngs_server.model.VideoTime import VideoTime
+from youngs_server.model.video_time import VideoTime
 from youngs_server.youngs_logger import Log
 from youngs_server.common.decorator import token_required
-from youngs_server.api.channel.controllers import channelRest
 
-import time
+import datetime, time
 
 
 reload(sys)
@@ -28,10 +27,22 @@ class VideoTimeInfo(Resource):
             help='teacher id'
         )
         self.channel_post_parser.add_argument(
-            'now_youtube_time', dest='nowYoutubeTime',
+            'now_youtube_time_hour', dest='nowYoutubeTimeHour',
             location='json',
             type=int,
-            help='updated youtube time'
+            help='updated youtube time hour'
+        )
+        self.channel_post_parser.add_argument(
+            'now_youtube_time_minute', dest='nowYoutubeTimeMinute',
+            location='json',
+            type=int,
+            help='updated youtube time minute'
+        )
+        self.channel_post_parser.add_argument(
+            'now_youtube_time_second', dest='nowYoutubeTimeSecond',
+            location='json',
+            type=int,
+            help='updated youtube time second'
         )
         self.channel_post_parser.add_argument(
             'is_playing', dest='isPlaying',
@@ -42,58 +53,71 @@ class VideoTimeInfo(Resource):
 
 
     @token_required
-    def put(self, channelId):
+    def put(self, channel_id):
         """ set channel time information from teacher"""
 
         args = self.channel_post_parser.parse_args()
-
-        nowVideoTime = dbManager.__session.query(VideoTime).filter(channelId=channelId).first()
+        Log.info("sefsefasafsfenebfkdrh")
+        nowVideoTime = db.session.query(VideoTime).filter_by(channelId=channel_id).first()
 
         newVideoTime = VideoTime(
             teacherId = args.teacherId,
-            channelId = channelId,
-            nowYoutubeTime = args.nowYoutubeTime,
-            updatedTime = time.localtime(),
+            channelId = channel_id,
+            nowYoutubeTimeHour = args.nowYoutubeTimeHour,
+            nowYoutubeTimeMinute = args.nowYoutubeTimeMinute,
+            nowYoutubeTimeSecond = args.nowYoutubeTimeSecond,
+            updatedTime = datetime.datetime.now(),
             isPlaying = args.isPlaying
         )
 
         if nowVideoTime is None :
-            dbManager.add(newVideoTime)
-            dbManager.commit()
+            db.session.add(newVideoTime)
+            db.session.commit()
             Log.info('channel is now open')
             return jsonify({'message': 'channel is now open'})
 
         if session['userId'] == args.teacherId :
-            nowVideoTime.nowYoutubeTime = args.nowYoutubeTime
+            nowVideoTime.nowYoutubeTimeHour = args.nowYoutubeTimeHour
+            nowVideoTime.nowYoutubeTimeMinute = args.nowYoutubeTimeMinute
+            nowVideoTime.nowYoutubeTimeSecond = args.nowYoutubeTimeSecond
             nowVideoTime.isPlaying = args.isPlaying
-
 
         nowVideoTime.updatedTime = newVideoTime.updatedTime
 
-        dbManager.commit()
+        db.session.commit()
 
-        return marshal({'results': nowVideoTime}, model_fields.channel_fields)
+        return marshal(newVideoTime, model_fields.video_time_fields, envelope='results')
 
 
     @token_required
-    def get(self, channelId):
+    def get(self, channel_id):
         """return channel time imformation"""
 
-        nowVideoTime = dbManager.__session.query(VideoTime).filter(channelId=channelId).first()
+        nowVideoTime = db.session.query(VideoTime).filter_by(channelId=channel_id).first()
 
         if nowVideoTime is None :
             Log.error('invalid channel id')
-            return jsonify({'message':'invalid channel id'}), 400
+            return jsonify({'message':'invalid channel id'})
 
-        spaceTime = time.localtime() - nowVideoTime.updatedTime
-        nowVideoTime.nowYoutubeTime += spaceTime
+        now = datetime.datetime.now()
 
-        nowVideoTime.updatedTime = time.localtime()
+        spaceTime = time.mktime(now.timetuple()) - time.mktime(nowVideoTime.updatedTime.timetuple())
+        nowVideoTime.nowYoutubeTimeHour += spaceTime / 3600
+        nowVideoTime.nowYoutubeTimeMinute += spaceTime / 60
+        nowVideoTime.nowYoutubeTimeSecond += spaceTime % 60
 
-        dbManager.commit()
+        if nowVideoTime.nowYoutubeTimeSecond/60 >= 1 :
+            tmpMin = nowVideoTime.nowYoutubeTimeSecond/60
+            nowVideoTime.nowYoutubeTimeMinute += tmpMin
+            nowVideoTime.nowYoutubeTimeSecond -= tmpMin*60
 
-        return marshal({'results': nowVideoTime}, model_fields.channel_fields)
+        if nowVideoTime.nowYoutubeTimeMinute/60 >= 1 :
+            tmpHour = nowVideoTime.nowYoutubeTimeMinute/60
+            nowVideoTime.nowYoutubeTimeHour += tmpHour
+            nowVideoTime.nowYoutubeTimeMinute -= tmpHour*60
 
+        nowVideoTime.updatedTime = now
 
+        db.session.commit()
 
-channelRest.add_resource(VideoTimeInfo, '<channel_id>/video')
+        return marshal(nowVideoTime, model_fields.video_time_fields, envelope='results')
