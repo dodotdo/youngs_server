@@ -46,7 +46,7 @@ class Channels(Resource):
         )
         self.make_channel_post_parser.add_argument(
             'youtube_url', dest='youtubeURL',
-            location='json', required=True,
+            location='json',
             type=str,
             help='teacher of the channel'
         )
@@ -63,22 +63,28 @@ class Channels(Resource):
             help='teachingDay of Channel, on-1, off-0'
         )
         self.make_channel_post_parser.add_argument(
-            'teaching_start_time', dest='teachingStartTime',
+            'teaching_time', dest='teachingTime',
             location='json', required=True,
             type=str,
             help='teachingStartTime of Channel'
-        )
-        self.make_channel_post_parser.add_argument(
-            'teaching_end_time', dest='teachingEndTime',
-            location='json', required=True,
-            type=str,
-            help='teachingEndTime of Channel'
         )
         self.make_channel_post_parser.add_argument(
             'price', dest='price',
             location='json', required=True,
             type=int,
             help='price of Channel free channel`s price is 0'
+        )
+        self.make_channel_post_parser.add_argument(
+            'favorite_cnt', dest='favoriteCnt',
+            location='json', required=True,
+            type=int,
+            help='favorite cnt of Channel free channel`s price is 0'
+        )
+        self.make_channel_post_parser.add_argument(
+            'read_cnt', dest='readCnt',
+            location='json', required=True,
+            type=int,
+            help='read cnt of Channel free channel`s price is 0'
         )
         self.make_channel_post_parser.add_argument(
             'listening_limit_cnt', dest='listeningLimitCnt',
@@ -106,7 +112,6 @@ class Channels(Resource):
 
         return marshal({'results': channelList}, model_fields.channel_list_fields)
 
-    @token_required
     def post(self):
         """makeChannel"""
         args = self.make_channel_post_parser.parse_args()
@@ -169,8 +174,7 @@ class Channels(Resource):
             youtubeURL=args.youtubeURL,
             isFree=args.isFree,
             teachingDay=args.teachingDay,
-            teachingStartTime=args.teachingStartTime,
-            teachingEndTime=args.teachingEndTime,
+            teachingTime=args.teachingTime,
             price=args.price,
             listeningLimitCnt=args.listeningLimitCnt,
             coverImageFileNameOriginal="",
@@ -198,23 +202,13 @@ class ChannelInfo(Resource):
 
 
 class ChannelStatus(Resource):
-    def __init__(self):
-        self.channel_status_post_parser = reqparse.RequestParser()
-        self.channel_status_post_parser.add_argument(
-            'type', dest='type',
-            location='json', required=True,
-            type=str,
-            help='type of the channel'
-        )
-
 
     @token_required
-    def put(self, channel_id):
+    def put(self, channel_id, type):
         """channel status change"""
 
         userId = session['userId']
         args = self.channel_status_post_parser.parse_args()
-        type = args.type
         userChannelModel = UserChannel(
             userId = userId,
             channelId = channel_id,
@@ -223,10 +217,11 @@ class ChannelStatus(Resource):
         )
 
         nowListeningChannel = db.session.query(UserChannel).filter_by(userId = userId, channelId = channel_id).first()
+        channel = db.session.query(Channel).filter_by(channelId=channel_id).first()
+
         if nowListeningChannel is None :
             """디비에 없는 경우"""
 
-            channel = db.session.query(Channel).filter_by(channelId=channel_id).first()
             #관계는 형성되지 않았지만 채널은 존재하는 경우 관계추가
             if channel is not None :
                 db.session.add(userChannelModel)
@@ -234,7 +229,27 @@ class ChannelStatus(Resource):
                 return jsonify({'result': 'doesn`t exist channel'})
         else :
             """디비에 있는 경우"""
-            nowListeningChannel.type = type
+            if type == "d" :
+                pass
+            elif type == "r" :
+                channel.readCnt+=1
+            elif type == "f" :
+                channel.favoriteCnt+=1
+            else :
+                channel.readCnt+=1
+                channel.favoriteCnt+=1
+
+            if nowListeningChannel.type == "d" :
+                pass
+            elif nowListeningChannel.type == "r" :
+                channel.readCnt-=1
+            elif nowListeningChannel.type == "f" :
+                channel.favoriteCnt-=1
+            else :
+                channel.readCnt-=1
+                channel.favoriteCnt-=1
+
+                nowListeningChannel.type = type
 
         db.session.commit()
 
@@ -244,7 +259,7 @@ class ChannelStatus(Resource):
 
 channelRest.add_resource(Channels, '')
 channelRest.add_resource(ChannelInfo, '/<channel_id>')
-channelRest.add_resource(ChannelStatus, '/<channel_id>/status')
+channelRest.add_resource(ChannelStatus, '/<channel_id>/status/<type>')
 channelRest.add_resource(Listen, '/<channel_id>/listenstatus')
 channelRest.add_resource(ReviewInfo, '/<channel_id>/review')
 channelRest.add_resource(VideoTimeInfo, '/<channel_id>/videotime')

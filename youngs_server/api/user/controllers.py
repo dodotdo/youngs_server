@@ -42,7 +42,7 @@ class UserInfo(Resource):
         """signup"""
         args = self.user_post_parser.parse_args()
 
-        duplicateUser = db.session.query(User).filter_by(nickname=args.nickname).first()
+        duplicateUser = db.session.query(User).filter_by(email = args.email).first()
 
         if duplicateUser is not None:
             return abort(401, message='duplicate user')
