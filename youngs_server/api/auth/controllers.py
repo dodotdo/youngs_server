@@ -18,6 +18,12 @@ class loginout(Resource) :
     def __init__(self):
         self.login_post_parser = reqparse.RequestParser()
         self.login_post_parser.add_argument(
+            'user_id', dest='notuse',
+            location='json',
+            type=int,
+            help='id of user'
+        )
+        self.login_post_parser.add_argument(
             'email', dest='email',
             location='json', required=True,
             type=str,
@@ -53,9 +59,10 @@ class loginout(Resource) :
             return jsonify({'result': 'login error'})
 
         token = user.generate_auth_token()
-
-        session['token']=token
+        user.token = token
+        session['token']= token
         session['userId']=user.userId
+        Log.info(str(session['userId']))
 
         return marshal(user, model_fields.user_fields, envelope='results')
 

@@ -21,12 +21,13 @@ log_filepath = os.path.join(youngs_app.root_path,
                                 youngs_app.config['LOG_FILE_PATH'])
 Log.init(log_filepath=log_filepath)
 
+"""
 # SessionInterface 설정.
 # Redis를 이용한 세션 구현은 cache_session.RedisCacheSessionInterface 임포트하고
 # app.session_interface에 RedisCacheSessionInterface를 할당
 from cache_session import SimpleCacheSessionInterface
 youngs_app.session_interface = SimpleCacheSessionInterface()
-
+"""
 
 from api.channel.controllers import apiChannel
 from api.auth.controllers import apiAuth

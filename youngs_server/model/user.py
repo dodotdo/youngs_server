@@ -14,6 +14,7 @@ class User(db.Model):
     __tablename__ = 'user'
 
     userId = Column(Integer, primary_key=True, autoincrement=True)
+    token = Column(String)
     email = Column(String(50), unique=True)
     hashedPassword = Column(String(55))
     nickname = Column(String(15), unique=True)

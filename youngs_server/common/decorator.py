@@ -3,6 +3,7 @@ from flask import session, request
 from flask_restful import abort
 from youngs_server.youngs_logger import Log
 from youngs_server.model.user import User
+from youngs_server.database import db
 
 
 def token_required(f):

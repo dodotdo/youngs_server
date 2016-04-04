@@ -39,12 +39,6 @@ class Channels(Resource):
             help='description of the channel'
         )
         self.make_channel_post_parser.add_argument(
-            'teacher_id', dest='teacherId',
-            location='json', required=True,
-            type=int,
-            help='teacher of the channel'
-        )
-        self.make_channel_post_parser.add_argument(
             'youtube_url', dest='youtubeURL',
             location='json',
             type=str,
@@ -112,13 +106,14 @@ class Channels(Resource):
 
         return marshal({'results': channelList}, model_fields.channel_list_fields)
 
+    @token_required
     def post(self):
         """makeChannel"""
         args = self.make_channel_post_parser.parse_args()
 
         """중복 채널 처리"""
         duplicateChannel = db.session.query(Channel).filter_by(title=args.title).first()
-
+        print session.__dict__
         if duplicateChannel is not None:
             return abort(401, message='duplicate channel title')
 
@@ -166,11 +161,11 @@ class Channels(Resource):
             Log.error(str(e))
             raise e
         """
-
+        Log.info(str(session['userId'])+"esfsefse")
         channel = Channel(
             title=args.title,
             description=args.description,
-            teacherId=args.teacherId,
+            teacherId=session['userId'],
             youtubeURL=args.youtubeURL,
             isFree=args.isFree,
             teachingDay=args.teachingDay,

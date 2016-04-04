@@ -2,6 +2,7 @@ from flask_restful import Resource, Api, fields, reqparse, abort, marshal_with
 
 user_fields = {
     'userId': fields.Integer,
+    'token' : fields.String,
     'email': fields.String,
     'nickname': fields.String,
     'learnClassCnt': fields.Integer,
