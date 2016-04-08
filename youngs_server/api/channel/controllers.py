@@ -216,8 +216,7 @@ class ChannelPhoto(Resource):
     def put(self, title):
         """ return channel list depending on type"""
         userId = session['userId']
-        file = request.form['file'].decode('utf-8')
-        file = request.form['file'].encode('utf-8', 'replace').decode('utf-8')
+        file = request.form['file']
         print request.headers
         # print file2
         #
