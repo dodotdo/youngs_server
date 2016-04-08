@@ -21,31 +21,19 @@ class VideoTimeInfo(Resource):
     def __init__(self):
         self.channel_post_parser = reqparse.RequestParser()
         self.channel_post_parser.add_argument(
-            'teacher_id', dest='teacherId',
+            'teacherId', dest='teacherId',
             location='json', required=True,
             type=int,
             help='teacher id'
         )
         self.channel_post_parser.add_argument(
-            'now_youtube_time_hour', dest='nowYoutubeTimeHour',
+            'playtime', dest='playtime',
             location='json',
             type=int,
-            help='updated youtube time hour'
+            help='youtube play time'
         )
         self.channel_post_parser.add_argument(
-            'now_youtube_time_minute', dest='nowYoutubeTimeMinute',
-            location='json',
-            type=int,
-            help='updated youtube time minute'
-        )
-        self.channel_post_parser.add_argument(
-            'now_youtube_time_second', dest='nowYoutubeTimeSecond',
-            location='json',
-            type=int,
-            help='updated youtube time second'
-        )
-        self.channel_post_parser.add_argument(
-            'is_playing', dest='isPlaying',
+            'isPlaying', dest='isPlaying',
             location='json',
             type=bool,
             help='is playing or not'
@@ -57,15 +45,12 @@ class VideoTimeInfo(Resource):
         """ set channel time information from teacher"""
 
         args = self.channel_post_parser.parse_args()
-        Log.info("sefsefasafsfenebfkdrh")
         nowVideoTime = db.session.query(VideoTime).filter_by(channelId=channel_id).first()
 
         newVideoTime = VideoTime(
             teacherId = args.teacherId,
             channelId = channel_id,
-            nowYoutubeTimeHour = args.nowYoutubeTimeHour,
-            nowYoutubeTimeMinute = args.nowYoutubeTimeMinute,
-            nowYoutubeTimeSecond = args.nowYoutubeTimeSecond,
+            playtime = args.playtime,
             updatedTime = datetime.datetime.now(),
             isPlaying = args.isPlaying
         )
@@ -74,19 +59,17 @@ class VideoTimeInfo(Resource):
             db.session.add(newVideoTime)
             db.session.commit()
             Log.info('channel is now open')
-            return jsonify({'message': 'channel is now open'})
+            return marshal(newVideoTime, model_fields.video_time_fields, envelope='results')
 
         if session['userId'] == args.teacherId :
-            nowVideoTime.nowYoutubeTimeHour = args.nowYoutubeTimeHour
-            nowVideoTime.nowYoutubeTimeMinute = args.nowYoutubeTimeMinute
-            nowVideoTime.nowYoutubeTimeSecond = args.nowYoutubeTimeSecond
+            nowVideoTime.playtime = args.playtime
             nowVideoTime.isPlaying = args.isPlaying
 
-        nowVideoTime.updatedTime = newVideoTime.updatedTime
+        nowVideoTime.updatedTime = datetime.datetime.now()
 
         db.session.commit()
 
-        return marshal(newVideoTime, model_fields.video_time_fields, envelope='results')
+        return marshal(nowVideoTime, model_fields.video_time_fields, envelope='results')
 
 
     @token_required
@@ -102,19 +85,7 @@ class VideoTimeInfo(Resource):
         now = datetime.datetime.now()
 
         spaceTime = time.mktime(now.timetuple()) - time.mktime(nowVideoTime.updatedTime.timetuple())
-        nowVideoTime.nowYoutubeTimeHour += spaceTime / 3600
-        nowVideoTime.nowYoutubeTimeMinute += spaceTime / 60
-        nowVideoTime.nowYoutubeTimeSecond += spaceTime % 60
-
-        if nowVideoTime.nowYoutubeTimeSecond/60 >= 1 :
-            tmpMin = nowVideoTime.nowYoutubeTimeSecond/60
-            nowVideoTime.nowYoutubeTimeMinute += tmpMin
-            nowVideoTime.nowYoutubeTimeSecond -= tmpMin*60
-
-        if nowVideoTime.nowYoutubeTimeMinute/60 >= 1 :
-            tmpHour = nowVideoTime.nowYoutubeTimeMinute/60
-            nowVideoTime.nowYoutubeTimeHour += tmpHour
-            nowVideoTime.nowYoutubeTimeMinute -= tmpHour*60
+        nowVideoTime.playtime += spaceTime
 
         nowVideoTime.updatedTime = now
 

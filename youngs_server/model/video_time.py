@@ -10,9 +10,7 @@ class VideoTime(db.Model):
 
     teacherId = Column(Integer, ForeignKey('user.userId'), primary_key=True)
     channelId = Column(Integer, ForeignKey('channel.channelId'), primary_key=True)
-    nowYoutubeTimeHour = Column(Integer)
-    nowYoutubeTimeMinute = Column(Integer)
-    nowYoutubeTimeSecond = Column(Integer)
+    playtime = Column(Integer)
     updatedTime = Column(DateTime)
     isPlaying = Column(Boolean)
 

@@ -15,6 +15,7 @@ channel_fields = {
     'title': fields.String,
     'description': fields.String,
     'teacherId': fields.Integer,
+    'teacherName' : fields.String,
     'youtubeURL': fields.String,
     'isFree': fields.Boolean,
     'favoriteCnt' : fields.Integer,
@@ -31,9 +32,7 @@ channel_fields = {
 video_time_fields = {
     'teacherId': fields.Integer,
     'channelId': fields.Integer,
-    'nowYoutubeTimeHour': fields.Integer,
-    'nowYoutubeTimeMinute': fields.Integer,
-    'nowYoutubeTimeSecond':fields.Integer,
+    'playtime': fields.Integer,
     'isPlaying': fields.Boolean
 }
 

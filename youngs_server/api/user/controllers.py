@@ -7,6 +7,7 @@ from flask_restful import Resource, Api, reqparse, abort, marshal
 from flask import Blueprint, session
 from youngs_server.model.user import User
 from youngs_server.common.decorator import token_required
+from youngs_server.youngs_logger import Log
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -41,11 +42,12 @@ class UserInfo(Resource):
     def post(self):
         """signup"""
         args = self.user_post_parser.parse_args()
+        Log.info("aefafaefa")
 
         duplicateUser = db.session.query(User).filter_by(email = args.email).first()
 
         if duplicateUser is not None:
-            return abort(401, message='duplicate user')
+            return abort(201, message='duplicate user')
 
         signupUser = User(
                 email=args.email,

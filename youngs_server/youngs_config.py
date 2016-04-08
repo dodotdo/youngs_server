@@ -8,7 +8,7 @@ class YoungsConfig(object):
     #: 사진 업로드 시 사진이 임시로 저장되는 임시 폴더
     TMP_FOLDER = 'resource/tmp/'
     #: 업로드 완료된 사진 파일이 저장되는 폴더
-    UPLOAD_CHANNEL_COVER_FOLDER = 'resource/channelcover/'
+    UPLOAD_CHANNEL_COVER_FOLDER = 'youngs_server/resource/channelcover/'
     #: 업로드되는 사진의 최대 크키(3메가)
     MAX_CONTENT_LENGTH = 10 * 1024 * 1024
     #: 세션 타임아웃은 초(second) 단위(60분)

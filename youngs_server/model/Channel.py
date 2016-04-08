@@ -14,6 +14,7 @@ class Channel(db.Model):
     title = Column(String(30))
     description = Column(Text)
     teacherId = Column(Integer, ForeignKey('user.userId'))
+    teacherName = Column(String)
     youtubeURL = Column(String(100))
     isFree = Column(Boolean)
     favoriteCnt = Column(Integer)
