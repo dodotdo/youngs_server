@@ -24,7 +24,7 @@ channel_fields = {
     'teachingTime': fields.String,
     'price': fields.Integer,
     'listeningLimitCnt': fields.Integer,
-    'coverImageFileNameOriginal': fields.String,
+    'file': fields.String,
     'fileName': fields.String,
     'fileSize': fields.Integer
 }

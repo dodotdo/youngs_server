@@ -23,7 +23,7 @@ class Channel(db.Model):
     teachingTime = Column(String)
     price = Column(Integer)
     listeningLimitCnt = Column(Integer)
-    coverImageFileNameOriginal = Column(Text)
+    file = Column(Text)
     fileName = Column(Text)
     fileSize = Column(Integer)
 

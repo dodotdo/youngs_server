@@ -41,6 +41,18 @@ class Channels(Resource):
             help='title of the channel'
         )
         self.make_channel_post_parser.add_argument(
+            'teacherId', dest='teacherId',
+            location='json', required=True,
+            type=int,
+            help='teacher id of the channel'
+        )
+        self.make_channel_post_parser.add_argument(
+            'teacherName', dest='teacherName',
+            location='json', required=True,
+            type=str,
+            help='teacher name of the channel'
+        )
+        self.make_channel_post_parser.add_argument(
             'description', dest='description',
             location='json', required=True,
             type=str,
@@ -94,6 +106,12 @@ class Channels(Resource):
             type=int,
             help='limit count of person who listen Channel'
         )
+        self.make_channel_post_parser.add_argument(
+            'fileName', dest='fileName',
+            location='json', required=True,
+            type=str,
+            help='cover image Channel'
+        )
 
     @token_required
     def get(self):
@@ -118,7 +136,7 @@ class Channels(Resource):
         duplicateChannel = db.session.query(Channel).filter_by(title=args.title).first()
 
         if duplicateChannel is not None:
-            return abort(401, message='duplicate channel title')
+            return abort(201, message='duplicate channel title')
 
         teacher = db.session.query(User).filter_by(userId=session['userId']).first()
 
@@ -133,7 +151,7 @@ class Channels(Resource):
             teachingTime=args.teachingTime,
             price=args.price,
             listeningLimitCnt=args.listeningLimitCnt,
-            coverImageFileNameOriginal="",
+            file="",
             fileName="",
             fileSize=0
         )
@@ -216,25 +234,25 @@ class ChannelPhoto(Resource):
     def put(self, title):
         """ return channel list depending on type"""
         userId = session['userId']
-        file = request.form['file']
-        print request.headers
-        # print file2
-        #
-        # print(file)
-        filename = secure_filename(title)+".jpg"
-        filepath = os.path.join(current_app.config['UPLOAD_CHANNEL_COVER_FOLDER'], filename)
-        if not os.path.exists(filepath):
-            with open(filepath, "w+") as f:
-                    f.write(file)
 
-        filename = os.path.split(filepath)
+        file = request.form['file']
+        filename = secure_filename(title)+".jpg"
+        # filepath = os.path.join(current_app.config['UPLOAD_CHANNEL_COVER_FOLDER'], filename)
+        # if not os.path.exists(filepath):
+        #     with open(filepath, "w+") as f:
+        #             f.write(file)
+        #
+        # filename = os.path.split(filepath)
 
         channel = db.session.query(Channel).filter_by(title=title).first()
 
         if channel is None:
             return abort(202, message="invalid channel")
 
-        channel.coverImageFileNameOriginal = filename
+        channel.fileName = filename
+        channel.file = file
+
+        db.session.commit()
 
         return marshal(channel, model_fields.channel_fields, envelope='results')
 
