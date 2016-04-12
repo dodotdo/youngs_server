@@ -18,7 +18,7 @@ class loginout(Resource) :
     def __init__(self):
         self.login_post_parser = reqparse.RequestParser()
         self.login_post_parser.add_argument(
-            'user_id', dest='notuse',
+            'userId', dest='notuse',
             location='json',
             type=int,
             help='id of user'
@@ -34,6 +34,18 @@ class loginout(Resource) :
             location='json', required=True,
             type=str,
             help='password of user'
+        )
+        self.login_post_parser.add_argument(
+            'token', dest='notuse',
+            location='json',
+            type=str,
+            help='none'
+        )
+        self.login_post_parser.add_argument(
+            'nickname', dest='notuse',
+            location='json',
+            type=str,
+            help='nickname'
         )
 
     def post(self):
@@ -53,10 +65,10 @@ class loginout(Resource) :
         try:
             if not user.verify_password(requestPassword):
                 Log.error('wrong password')
-                return jsonify({'result':'wrong password'})
+                return abort(401, message='wrong password')
         except:
             Log.error('login error')
-            return jsonify({'result': 'login error'})
+            return abort(401, message='error')
 
         token = user.generate_auth_token()
         user.token = token

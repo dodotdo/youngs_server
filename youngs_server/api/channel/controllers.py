@@ -41,6 +41,12 @@ class Channels(Resource):
             help='title of the channel'
         )
         self.make_channel_post_parser.add_argument(
+            'channelId', dest='channelId',
+            location='json',
+            type=int,
+            help='channelId of the channel'
+        )
+        self.make_channel_post_parser.add_argument(
             'teacherId', dest='teacherId',
             location='json', required=True,
             type=int,
@@ -119,18 +125,45 @@ class Channels(Resource):
 
         userId = session['userId']
         type = request.args.get('type')
-        channelList = db.session.query(UserChannel).filter_by(userId=userId, type=type).all()
+        #type이 없는 경우 -> 모든 채널
+        #a = 모두, recommand = recommand, b=best, m=my
+        if type=='a' :
+            channelList = db.session.query(Channel).all()
+            if channelList == []:
+                return abort(201, message='no exist channel')
+            return marshal({'results': channelList}, model_fields.channel_list_fields)
 
-        if channelList == []:
-            return jsonify({'message': 'channel is not exist'})
+        if type=='recommand' :
+            channelList = db.session.query(Channel).order_by("favoriteCnt desc").all()
+            if channelList == []:
+                return abort(201, message='no exist channel')
+            return marshal({'results': channelList}, model_fields.channel_list_fields)
 
-        return marshal(channelList, model_fields.channel_list_fields, envelope='results')
+        if type=='b' :
+            channelList = db.session.query(Channel).order_by("readCnt desc").all()
+            if channelList == []:
+                return abort(201, message='no exist channel')
+            return marshal({'results': channelList}, model_fields.channel_list_fields)
+
+        if type=='m' :
+            channelList = db.session.query(Channel).filter_by(teacherId=userId).all()
+            if channelList == []:
+                return abort(201, message='no exist channel')
+            return marshal({'results': channelList}, model_fields.channel_list_fields)
+
+        userChannelList = db.session.query(UserChannel).filter_by(userId=userId, type=type).all()
+        channelList=[]
+        for i in userChannelList:
+            channelList[i] = db.session.query(Channel).filter_by(channelId=userChannelList[i].channelId).first()
+        return marshal({'results': channelList}, model_fields.channel_list_fields)
 
 
     @token_required
     def post(self):
         """makeChannel"""
         args = self.make_channel_post_parser.parse_args()
+
+        Log.info(args.description)
 
         """중복 채널 처리"""
         duplicateChannel = db.session.query(Channel).filter_by(title=args.title).first()

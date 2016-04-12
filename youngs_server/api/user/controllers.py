@@ -21,22 +21,34 @@ class UserInfo(Resource):
     def __init__(self):
         self.user_post_parser = reqparse.RequestParser()
         self.user_post_parser.add_argument(
+            'userId', dest='notuse',
+            location='json',
+            type=int,
+            help='id of user not use'
+        )
+        self.user_post_parser.add_argument(
             'email', dest='email',
             location='json', required=True,
             type=str,
-            help='email of the user'
-        )
-        self.user_post_parser.add_argument(
-            'nickname', dest='nickname',
-            location='json', required=True,
-            type=str,
-            help='nickname of the user'
+            help='email of user'
         )
         self.user_post_parser.add_argument(
             'password', dest='password',
             location='json', required=True,
             type=str,
-            help='password of the user'
+            help='password of user'
+        )
+        self.user_post_parser.add_argument(
+            'token', dest='notuse',
+            location='json',
+            type=str,
+            help='none'
+        )
+        self.user_post_parser.add_argument(
+            'nickname', dest='nickname',
+            location='json',
+            type=str,
+            help='nickname'
         )
 
     def post(self):

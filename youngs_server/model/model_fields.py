@@ -2,12 +2,13 @@ from flask_restful import Resource, Api, fields, reqparse, abort, marshal_with
 
 user_fields = {
     'userId': fields.Integer,
-    'token' : fields.String,
+    'token': fields.String,
     'email': fields.String,
     'nickname': fields.String,
     'learnClassCnt': fields.Integer,
     'point': fields.Integer,
-    'teachingClassCnt': fields.Integer
+    'teachingClassCnt': fields.Integer,
+    'password': fields.String
 }
 
 channel_fields = {
@@ -15,11 +16,11 @@ channel_fields = {
     'title': fields.String,
     'description': fields.String,
     'teacherId': fields.Integer,
-    'teacherName' : fields.String,
+    'teacherName': fields.String,
     'youtubeURL': fields.String,
     'isFree': fields.Boolean,
-    'favoriteCnt' : fields.Integer,
-    'readCnt' : fields.Integer,
+    'favoriteCnt': fields.Integer,
+    'readCnt': fields.Integer,
     'teachingDay': fields.Integer,
     'teachingTime': fields.String,
     'price': fields.Integer,
@@ -37,7 +38,7 @@ video_time_fields = {
 }
 
 channel_list_fields = {
-    'results': fields.List(fields.Nested(channel_fields))
+        'results': fields.List(fields.Nested(channel_fields))
 }
 
 review_fields = {
