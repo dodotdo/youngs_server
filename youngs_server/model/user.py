@@ -1,36 +1,53 @@
 # -*- coding: utf-8 -*-
 
 
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
-from youngs_server.model import Base
+from sqlalchemy import Column, Integer, String, Text
+from youngs_server.youngs_logger import Log
+from youngs_server.database import db
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask import current_app
+from itsdangerous import (TimedJSONWebSignatureSerializer
+                          as Serializer, BadSignature, SignatureExpired)
 
 
-class User(Base):
+class User(db.Model):
     __tablename__ = 'user'
 
     userId = Column(Integer, primary_key=True, autoincrement=True)
+    token = Column(String)
     email = Column(String(50), unique=True)
-    password = Column(String(55), unique=False)
+    hashedPassword = Column(String(55))
     nickname = Column(String(15), unique=True)
-    imageFileNameOriginal = Column(String(400), unique=False)
-    fileName = Column(String(400), unique=False)
-    fileSize = Column(Integer, unique=False)
-    learnClassCnt = Column(Integer, unique=False)
-    point = Column(Integer, unique=False)
-    teachingClassCnt = Column(Integer, unique=False)
+    imageFileNameOriginal = Column(Text)
+    fileName = Column(Text)
+    fileSize = Column(Integer)
+    learnClassCnt = Column(Integer)
+    point = Column(Integer)
+    teachingClassCnt = Column(Integer)
 
-    #id는 자동생성
-    def __init__(self, email, password, nickname, imageFileNameOriginal, fileName, fileSize, learnClassCnt, point, teachingClassCnt):
-        self.email = email
-        self.password = password
-        self.nickname = nickname
-        self.imageFileNameOriginal = imageFileNameOriginal
-        self.fileName = fileName
-        self.fileSize = fileSize
-        self.learnClassCnt = learnClassCnt
-        self.point = point
-        self.teachingClassCnt = teachingClassCnt
 
     def __repr__(self):
         return '<User %r %r>' % (self.nickname, self.email)
+
+    def hash_password(self, password):
+        self.hashedPassword = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.hashedPassword, password)
+
+    def generate_auth_token(self, expiration=360000):
+        s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
+
+        return s.dumps({'userId': self.userId})
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except SignatureExpired:
+            return None    # valid token, but expired
+        except BadSignature:
+            return None    # invalid token
+        user = User.query.get(data['userId'])
+        return user
