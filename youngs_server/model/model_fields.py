@@ -55,8 +55,13 @@ review_list_fields = {
 }
 
 user_channel_fields = {
-    'userId': fields.Integer,
     'channelId': fields.Integer,
-    'type': fields.String,
-    'isListening': fields.Boolean
+    'nowCnt' : fields.Integer,
+    'favoriteCnt' : fields.Integer,
+    'readCnt' : fields.Integer,
+    'isFavorite' : fields.Boolean,
+    'isRead' : fields.Boolean,
+    'classCnt' : fields.Integer,
+    'rate' : fields.Float,
+    'reviewCnt' : fields.Integer
 }

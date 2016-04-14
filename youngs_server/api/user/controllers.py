@@ -34,7 +34,7 @@ class UserInfo(Resource):
         )
         self.user_post_parser.add_argument(
             'password', dest='password',
-            location='json', required=True,
+            location='json',
             type=str,
             help='password of user'
         )
