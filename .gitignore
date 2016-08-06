@@ -8,3 +8,4 @@ app_server/youngs_server/customlib/*
 **/*.jpg
 app_server/redis-3.2.0/*
 venv/*
+app_server/log/*
