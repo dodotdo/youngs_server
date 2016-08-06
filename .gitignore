@@ -1,0 +1,6 @@
+app_server/venv/*
+**/*.pyc
+**/*.pyo
+.idea/*
+**/*.jpg
+app_server/redis-3.2.0/*
