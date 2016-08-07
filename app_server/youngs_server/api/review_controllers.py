@@ -5,6 +5,7 @@ import time as ptime
 import jwt
 from random import shuffle
 from youngs_server.helpers.image_helper import save_json_image, generate_image_url
+from youngs_server.helpers.login_module import current_id
 from youngs_server.youngs_app import db, hash_mod, youngs_redis
 from youngs_server.youngs_app import log
 from flask import Blueprint, jsonify, request, current_app
@@ -35,11 +36,12 @@ class ReviewItemList(Resource):
 
     def post(self, lecture_id):
         abort_if_lecture_not_exist(lecture_id)
+        current_userid = current_id(request)
         lecture = Lecture.query.filter_by(id=lecture_id).one()
         args = self.review_post_parser.parse_args()
         review = Review(
                 lecture_id=lecture_id,
-                member_id=current_user.id,
+                member_id=current_userid,
                 point=args.point,
                 content=args.content
         )

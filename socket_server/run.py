@@ -15,7 +15,7 @@ from twisted.internet import reactor
 if __name__ == '__main__':
     server = None
     app = SocketApp()
-
+    reactor.listenTCP(8030, app.echoFactory)
     reactor.listenTCP(9000, app.witalkieFactory)
     reactor.listenTCP(8000, app.serverFactory)
     reactor.run()

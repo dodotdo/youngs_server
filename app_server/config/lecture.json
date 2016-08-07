@@ -1,0 +1,59 @@
+
+[
+    {
+        "title": "영화보기",
+        "description": "영화볼때 필요한 표현들",
+        "member": 1,
+        "status": "READY",
+        "type": "FREE",
+        "img": "movie.jpg"
+    },
+    {
+        "title": "학교에서 쓰는 표현",
+        "description": "실전 수업영어!",
+        "member": 2,
+        "status": "READY",
+        "type": "FREE",
+        "img": "school.jpg"
+    },
+    {
+        "title": "OPIC 여행주제 마스터 하기",
+        "description": "OPIC 대비 완벽 분석",
+        "member": 3,
+        "status": "READY",
+        "type": "OPIC",
+        "img": "jounery.jpg"
+    },
+    {
+        "title": "TOEIC 스피킹 심층분석",
+        "description": "2주만에 끝내는 토익스피킹",
+        "member": 2,
+        "status": "FINISHED",
+        "type": "TOEIC",
+        "img": "toeic.jpg"
+    },
+    {
+        "title": "코딩 면접: 준비하기",
+        "description": "신입 개발자가 살아남는 비법서",
+        "member": 1,
+        "status": "READY",
+        "type": "INTERVIEW",
+        "img": "interview.jpg"
+    },
+    {
+        "title": "LV7 토익스피킹",
+        "description": "토익 990만점을 위하여",
+        "member": 1,
+        "status": "READY",
+        "type": "TOEIC",
+        "img": "toeic2.jpg"
+    },
+    {
+        "title": "일상영어: 가족 편",
+        "description": "일상생활 유용한 생활 영어에 대해서 알려드립니다.",
+        "member": 2,
+        "status": "READY",
+        "type": "LIFE",
+        "img": "life.jpg"
+    }
+]

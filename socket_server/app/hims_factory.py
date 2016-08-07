@@ -19,3 +19,14 @@ class WitalkieFactory(Factory):
         self.count = 0
         self.server = None
 
+
+
+class EchoFactory(Factory):
+
+    def __init__(self, protocol):
+        self.protocol = protocol
+        self.count = 0
+        self.server = None
+
+
+

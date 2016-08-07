@@ -9,3 +9,7 @@ class Constants:
     def redis_youngs_live_lecture_listener_key(lecture_id):
         return Constants.redis_youngs_live_lecture_key(lecture_id) + ':listener'
 
+
+    @staticmethod
+    def redis_youngs_live_lecture_occupy_key(lecture_id):
+        return Constants.redis_youngs_live_lecture_key(lecture_id) + ':occupy'

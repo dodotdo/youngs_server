@@ -12,3 +12,7 @@ class Constants:
     @staticmethod
     def redis_youngs_lecture_listener_key(channel_id):
         return Constants.redis_youngs_lecture_key(channel_id) + ':listener'
+
+    @staticmethod
+    def redis_youngs_auth_token(token):
+        return 'auth:token:'+token

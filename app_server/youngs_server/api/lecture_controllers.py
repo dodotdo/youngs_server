@@ -11,9 +11,10 @@ from youngs_server.api.review_controllers import ReviewItemList
 from youngs_server.common.errors import abort_if_lecture_not_exist
 from youngs_server.helpers.image_helper import generate_image_url
 from youngs_server.helpers.image_helper import save_json_image
+from youngs_server.helpers.login_module import current_id
 from youngs_server.youngs_app import hash_mod, db
 from youngs_server.youngs_app import log
-from flask import Blueprint, jsonify, request, send_file, current_app
+from flask import Blueprint, jsonify, request, send_file, current_app, session
 from flask_login import current_user
 from werkzeug.utils import secure_filename
 
@@ -42,8 +43,9 @@ class LectureItemList(Resource):
     @login_required
     def post(self):
         args = self.lecture_post_parser.parse_args()
+        current_userid = current_id(request)
         lecture = Lecture(
-            member_id=current_user.id,
+            member_id=current_userid,
             title=args.title,
             description=args.description,
             type=args.type
@@ -52,9 +54,10 @@ class LectureItemList(Resource):
             img_filename = save_json_image('LECTURE_IMAGE_FOLDER', args.img)
             lecture.img_filename = img_filename
             lecture.img_url = generate_image_url('lecture', img_filename)
-
+        else:
+            abort(406, message="img required")
         db.session.add(lecture)
-        member = Member.query.filter_by(id=current_user.id).one()
+        member = Member.query.filter_by(id=current_userid).one()
         member.lecture_num += 1
 
         db.session.commit()
@@ -66,17 +69,20 @@ class LectureItemList(Resource):
         """
         :return: lecture list
         """
-        print('hi')
         order_by = request.args.get('order_by')
         num = request.args.get('num', default=10)
         type = request.args.get('type')
         start = request.args.get('start', default=0)
-        is_live = request.args.get('is_live', type=bool)
+        status = request.args.get('status', type=str)
         is_attended = request.args.get('is_attended', type=bool)
         is_teaching = request.args.get('is_teaching', type=bool)
 
 
+        # lecture_all = Lecture.query.all()
+        # for each_lecture in lecture_all:
+        #     listeners = youngs_redis.smembers(Constants.redis_youngs_live_lecture_listener_key(each_lecture.id))
 
+        current_userid = current_id(request)
         lecture_filter_query = []
         if type is not None:
             try:
@@ -84,13 +90,13 @@ class LectureItemList(Resource):
             except:
                 abort(406, message="type wrong formed. it should be like type=['TOEIC','FREE']")
             lecture_filter_query.append(Lecture.type.in_(type))
-        if is_live is not None:
-            lecture_filter_query.append(Lecture.is_live == is_live)
+        if status is not None:
+            lecture_filter_query.append(Lecture.status == status)
         if is_teaching is not None:
-            lecture_filter_query.append(Lecture.member_id == current_user.id)
+            lecture_filter_query.append(Lecture.member_id == current_userid)
         if is_attended is True:
             # sorry for durty code haha
-            lecture_list = Lecture.query.outerjoin(Attend).filter(Attend.member_id == current_user.id)
+            lecture_list = Lecture.query.outerjoin(Attend).filter(Attend.member_id == current_userid)
             return marshal({'results': lecture_list}, lecture_list_fields['normal'])
 
         lecture_order_query = []
@@ -119,8 +125,8 @@ class LectureItem(Resource):
         lecture = Lecture.query.filter_by(id=lecture_id).one()
         db.session.delete(lecture)
         db.session.commit()
-
-        member = Member.query.filter_by(id=current_user.id).one()
+        current_userid = current_id(request)
+        member = Member.query.filter_by(id=current_userid).one()
         member.lecture_num -= 1
         # redis_res = youngs_redis.srem(Constants.REDIS_YOUNGS_LECTURE_LIVE_KEY, lecture.id)
         # if redis_res == 0:
@@ -167,24 +173,24 @@ class LectureItem(Resource):
         return marshal(lecture, lecture_fields[level], envelope='results')
 
 
-class LectureLiveItem(Resource):
+class LectureStatusItem(Resource):
 
     @login_required
     def put(self, lecture_id):
         """
         :return: lecture
         """
-        is_live = request.json.get('is_live')
-        if is_live is None:
-            abort(406, message="is_live attribute required")
+        status = request.json.get('status')
+        if status is None:
+            abort(406, message="status attribute required")
         abort_if_lecture_not_exist(lecture_id)
         lecture = Lecture.query.filter_by(id=lecture_id).one()
-        lecture.is_live = is_live
+        lecture.status = status
         db.session.commit()
-        if is_live:
+        if status == 'STANDBY':
             redis_res = youngs_redis.sadd(Constants.REDIS_YOUNGS_LIVE_LECTURE_KEY, lecture.id)
             print(redis_res)
-        else:
+        elif status == 'FINISH':
             redis_res = youngs_redis.srem(Constants.REDIS_YOUNGS_LIVE_LECTURE_KEY, lecture.id)
             print(redis_res)
 
@@ -195,12 +201,10 @@ class LectureAttendItem(Resource):
     @login_required
     def post(self, lecture_id):
         lecture = Lecture.query.filter_by(id=lecture_id).one()
-        if lecture.is_live is False:
-            abort(403, message="Lecture is closed")
-
+        if lecture.status not in ['STANDBY', 'READY']:
+            abort(403, message="Lecture is not attendable")
+        current_userid = current_id(request)
         res = youngs_redis.smembers(Constants.redis_youngs_live_lecture_listener_key(lecture_id))
-        print(current_user.id)
-        print(lecture.member_id)
         if res is not None:
             for each_listener in res:
                 listener = int(each_listener.decode('utf-8'))
@@ -208,33 +212,90 @@ class LectureAttendItem(Resource):
                     # User removed
                     youngs_redis.srem(Constants.redis_youngs_live_lecture_listener_key(lecture_id), listener)
 
-                if current_user.id == lecture.member_id:
+                if current_userid == lecture.member_id:
                     continue
 
-                if listener != current_user.id and listener != lecture.member_id:
+                if listener != current_userid and listener != lecture.member_id:
                     abort(409, message="Someone is already listening the lecture")
 
-        if Attend.query.filter_by(member_id=current_user.id, lecture_id=lecture_id).first() is None:
+        if Attend.query.filter_by(member_id=current_userid, lecture_id=lecture_id).first() is None:
 
             attend = Attend(
-                member_id=current_user.id,
+                member_id=current_userid,
                 lecture_id=lecture_id
             )
             db.session.add(attend)
-            db.session.commit()
-        youngs_redis.sadd(Constants.redis_youngs_live_lecture_listener_key(lecture_id), current_user.id)
-        youngs_redis.expire(Constants.redis_youngs_live_lecture_listener_key(lecture_id), 600)
+
+        if current_userid != lecture.member_id:
+            # student attended
+            print(current_userid)
+            print(lecture.member_id)
+            lecture.status = 'ONAIR'
+        else:
+            lecture.status = 'STANDBY'
+        db.session.commit()
+        token = request.headers.get('Authorization').replace('JWT ', '', 1)
+        youngs_redis.sadd(Constants.redis_youngs_live_lecture_listener_key(lecture_id), current_userid)
+        # youngs_redis.expire(Constants.redis_youngs_live_lecture_listener_key(lecture_id), 600)
+        youngs_redis.hset('auth:token:' + token, 'lecture_id', lecture_id)
 
         return jsonify({'results': 'success'})
 
     @login_required
     def delete(self, lecture_id):
         abort_if_lecture_not_exist(lecture_id)
-        res = youngs_redis.srem(Constants.redis_youngs_live_lecture_listener_key(lecture_id), current_user.id)
-        if res:
-            return jsonify({'results': 'success'})
+        current_userid = current_id(request)
+        lecture = Lecture.query.filter_by(id=lecture_id).one()
+
+        token = request.headers.get('Authorization').replace('JWT ', '', 1)
+        res = youngs_redis.srem(Constants.redis_youngs_live_lecture_listener_key(lecture_id), current_userid)
+        youngs_redis.hdel('auth:token:'+token, {'lecture_id': lecture_id})
+        if current_userid == lecture.member_id:
+            # teacher exit
+            lecture.status = 'FINISHED'
         else:
-            abort(403, message="not listening")
+            if res is not None:
+                lecture.status = 'STANDBY'
+        db.session.commit()
+        return jsonify({'results': 'success'})
+
+class LectureOccupyItem(Resource):
+
+    @login_required
+    def post(self, lecture_id):
+        lecture = Lecture.query.filter_by(id=lecture_id).one()
+        current_userid = current_id(request)
+        if lecture.status != 'ONAIR':
+            abort(403, message="Lecture is not in ONAIR")
+
+        res = youngs_redis.sismember(Constants.redis_youngs_live_lecture_listener_key(lecture_id), current_userid)
+        if res is False:
+            abort(403, message="Not a listener")
+
+        # request occupy
+        redis_res = youngs_redis.get(Constants.redis_youngs_live_lecture_occupy_key(lecture_id))
+        if redis_res is not None and redis_res.decode('utf-8') != current_userid:
+            abort(409, message="Someone speacking")
+
+        # Occupy
+        pipe = youngs_redis.pipeline()
+        pipe.set(Constants.redis_youngs_live_lecture_occupy_key(lecture_id), current_userid)
+        pipe.expire(Constants.redis_youngs_live_lecture_occupy_key(lecture_id), 200)
+        pipe.execute()
+        return jsonify({'results': 'success'})
+
+    @login_required
+    def delete(self, lecture_id):
+        abort_if_lecture_not_exist(lecture_id)
+        current_userid = current_id(request)
+        res = youngs_redis.sismember(Constants.redis_youngs_live_lecture_listener_key(lecture_id), current_userid)
+        if res is False:
+            abort(403, message="Not a listener")
+
+        res = youngs_redis.get(Constants.redis_youngs_live_lecture_occupy_key(lecture_id))
+        youngs_redis.delete(Constants.redis_youngs_live_lecture_occupy_key(lecture_id))
+        return jsonify({'results': 'success'})
+
 
 class LectureListenerItem(Resource):
     @login_required
@@ -246,13 +307,14 @@ class LectureListenerItem(Resource):
             for each_listener in res:
                 listener_id = int(each_listener.decode('utf-8'))
                 listener_list.append(Member.query.filter_by(id=listener_id).one())
-        print(listener_list)
+
         return marshal({'results': listener_list}, member_list_fields['normal'])
 
 
 lecture_rest.add_resource(LectureItemList, '')
 lecture_rest.add_resource(LectureItem, '/<lecture_id>')
-lecture_rest.add_resource(LectureLiveItem, '/<lecture_id>/live')
+lecture_rest.add_resource(LectureStatusItem, '/<lecture_id>/live')
 lecture_rest.add_resource(LectureListenerItem, '/<lecture_id>/listener')
 lecture_rest.add_resource(LectureAttendItem, '/<lecture_id>/attend')
+lecture_rest.add_resource(LectureOccupyItem, '/<lecture_id>/occupy')
 lecture_rest.add_resource(ReviewItemList, '/<lecture_id>/review')

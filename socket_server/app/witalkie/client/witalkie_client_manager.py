@@ -22,8 +22,17 @@ class WitalkieClientManager():
     def delete_witalkie_client(self, client):
         witalkie_client = next((x for x in self.witalkie_clients if x.protocol == client), None)
         userid = witalkie_client.get_userid()
-        res = youngs_redis.srem(Constants.redis_youngs_lecture_listener_key(witalkie_client.channel_id), userid)
+        res = youngs_redis.srem(Constants.redis_youngs_lecture_listener_key(witalkie_client.lecture_id), userid)
+        youngs_redis.delete(Constants.redis_youngs_lecture_occupy_key(witalkie_client.lecture_id))
+        youngs_redis.delete(Constants.redis_youngs_auth_token)
         self.witalkie_clients.remove(witalkie_client)
         del(witalkie_client)
 
         return
+
+    def get_witalkie_client_by_lecture_id(self, lecture_id):
+        client_list = []
+        for each_client in self.witalkie_clients:
+            if each_client.lecture_id == lecture_id:
+                client_list.append(each_client)
+        return client_list

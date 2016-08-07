@@ -53,21 +53,20 @@ class MemberAuth(Resource):
         db.session.commit()
 
         token_payload = {
-            'email': member.email,
+            'id': member.id,
             'exp': datetime.utcnow() + timedelta(days=7)
         }
         token = jwt.encode(token_payload, current_app.config['SECRET_KEY'], algorithm='HS256').decode('utf-8')
         session_ttl = int(current_app.config['SESSION_ALIVE_MINUTES'] * 60)
         p = youngs_redis.pipeline()
-        if youngs_redis.get('auth:token:'+token) is None:
-            p.set('auth:token:'+token, member.email)
+        if youngs_redis.exists('auth:token:'+token) is False:
+            p.hmset('auth:token:'+token, {'id': member.id})
         p.expire('auth:token:'+token, session_ttl)
         p.execute()
         session['token'] = token
         member.token = token
 
         log.info('Login : '+member.email)
-
         return marshal(member, auth_member_fields, envelope='results')
 
 
@@ -77,7 +76,6 @@ class MemberAuth(Resource):
         :return: logout session, which means delete token and session
         """
         if 'token' in session:
-            youngs_redis.get('auth:token:'+session['token'])
             log.info('session token %s', session['token'])
             youngs_redis.delete('auth:token'+session['token'])
         if 'user_id' in session:

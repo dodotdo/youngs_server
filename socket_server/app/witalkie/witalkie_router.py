@@ -1,5 +1,7 @@
 import json
 from app.helper.wrapper import make_response, make_voice_packet
+from app.helper.redis_helper import youngs_redis
+from config.constants import Constants
 
 class YoungsRouter(object):
     def __init__(self, protocol):
@@ -25,6 +27,10 @@ class YoungsRouter(object):
             self.protocol.message(make_response(404, 'wrong channel id'))
             return None
         return channel
+
+    def _get_listeners_by_channel_id(self, channel_id):
+        res = youngs_redis.smembers(Constants.redis_youngs_lecture_listener_key(channel_id))
+        return [listener.decode('utf-8') for listener in res] if res is not None else []
 
     def select_channel(self, payload):
         channel = self._get_channel(payload)
@@ -62,20 +68,15 @@ class YoungsRouter(object):
             self.protocol.message(make_response(403, 'Not occupier', 'release_channel'))
 
     def send_voice(self, channel_id, payload):
-        channel = self._get_channel_by_id(channel_id)
-        if channel.get_occupier() != self.protocol.youngs_client.userid:
-            print('send voice, occupied')
-            self.protocol.message(make_response(403, 'Unauthorized'))
-            return None
 
         voice = payload
-        listeners = channel.get_listeners()
-
+        listeners = self._get_listeners_by_channel_id(channel_id)
+        print('listener : ' + str(listeners))
         for each_listener in listeners:
             if each_listener == self.protocol.youngs_client.userid:
                 continue
             listener = self.protocol.factory.witalkie_client_manager.get_witalkie_client_by_userid(each_listener)
-            print(b'listening : ' + each_listener)
+            print('listening : ' + each_listener)
             listener.protocol.message(make_voice_packet(voice))
 
 

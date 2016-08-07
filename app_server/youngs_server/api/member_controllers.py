@@ -49,7 +49,7 @@ class MemberItemList(Resource):
     def post(self):
         args = self.member_post_parser.parse_args()
         email = args.email
-        print(request.headers)
+
         if email is None:
             abort(406, message="needs email")
         if re.match("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$", email) is None:
@@ -63,7 +63,7 @@ class MemberItemList(Resource):
         member.hash_password(args.password)
 
         if args.profile_img is not None:
-            print(args.profile_img)
+
             profile_filename = save_json_image('PROFILE_IMAGE_FOLDER', args.profile_img)
             member.profile_filename = profile_filename
             member.profile_url = generate_image_url('profile', profile_filename)

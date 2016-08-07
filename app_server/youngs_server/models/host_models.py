@@ -91,7 +91,7 @@ class Lecture(db.Model):
     point_avg = db.Column(db.Float, default=0)
 
     member_id = db.Column(db.Integer, db.ForeignKey('member.id'))
-    is_live = db.Column(db.Boolean, default=False)
+    status = db.Column(db.String(32), default='READY')
     register_timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     member = db.relationship('Member',  uselist=False)

@@ -2,6 +2,8 @@
 
 import time
 import json
+
+import jwt
 import os
 from youngs_server.customlib.flask_restful import abort
 from sqlalchemy import exc
@@ -74,8 +76,12 @@ def after_request(response):
 
     diff = datetime.now() - g.start
     try:
+        authorization_value = request.headers.get('Authorization')
+        token = authorization_value.replace('JWT ', '', 1)
+        userinfo = jwt.decode(token, current_app.config['SECRET_KEY'])
+        print(userinfo)
         request_log = {
-            'email': current_user.email if 'email' in session else 'anonymouse',
+            'id': current_user.id,
             'request_path': request.path,
             'request_args': request_args,
             'request_method': request.method,
