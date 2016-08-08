@@ -52,7 +52,7 @@ class QuestionItemList(Resource):
         if question_type is None:
             abort(406, message="type is required")
 
-        question_list = Question.query.filter_by(type=question_type).all()
+        question_list = Question.query.filter_by(type=question_type).order_by(Question.id).all()
         print(question_list)
         shuffle(question_list)
         print(question_list)
