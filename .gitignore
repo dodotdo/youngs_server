@@ -1,6 +1,5 @@
 app_server/venv/*
 app_server/youngs_server/.idea/*
-app_server/youngs_server/customlib/*
 
 **/*.pyc
 **/*.pyo
