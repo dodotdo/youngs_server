@@ -77,11 +77,13 @@ def after_request(response):
     diff = datetime.now() - g.start
     try:
         authorization_value = request.headers.get('Authorization')
+        if authorization_value is None:
+            authorization_value = ''
         token = authorization_value.replace('JWT ', '', 1)
-        userinfo = jwt.decode(token, current_app.config['SECRET_KEY'])
-        print(userinfo)
+        # userinfo = jwt.decode(token, current_app.config['SECRET_KEY'])
+        # print(userinfo)
         request_log = {
-            'id': current_user.id,
+            # 'id': current_user.id,
             'request_path': request.path,
             'request_args': request_args,
             'request_method': request.method,

@@ -1,6 +1,5 @@
 app_server/venv/*
 app_server/youngs_server/.idea/*
-app_server/youngs_server/customlib/*
 
 **/*.pyc
 **/*.pyo
@@ -9,9 +8,12 @@ app_server/youngs_server/customlib/*
 app_server/redis-3.2.0/*
 venv/*
 app_server/log/*
+<<<<<<< HEAD
 
 .idea/youngs_server.iml
 
 .idea/workspace.xml
 
 .idea/misc.xml
+=======
+>>>>>>> origin/develop
