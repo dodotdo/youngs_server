@@ -9,3 +9,9 @@ app_server/youngs_server/customlib/*
 app_server/redis-3.2.0/*
 venv/*
 app_server/log/*
+
+.idea/youngs_server.iml
+
+.idea/workspace.xml
+
+.idea/misc.xml
