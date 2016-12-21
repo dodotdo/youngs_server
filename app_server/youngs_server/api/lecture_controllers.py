@@ -280,7 +280,7 @@ class LectureOccupyItem(Resource):
         # Occupy
         pipe = youngs_redis.pipeline()
         pipe.set(Constants.redis_youngs_live_lecture_occupy_key(lecture_id), current_userid)
-        pipe.expire(Constants.redis_youngs_live_lecture_occupy_key(lecture_id), 200)
+        pipe.expire(Constants.redis_youngs_live_lecture_occupy_key(lecture_id), 10)
         pipe.execute()
         return jsonify({'results': 'success'})
 
