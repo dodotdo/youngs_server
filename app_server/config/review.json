@@ -1,0 +1,50 @@
+[
+  {
+    "point": 4,
+    "content": "영어 공부 하기 편리해요 공부하고 싶을때 아무때나 할수 있고 좋아요",
+    "member_id": 1,
+    "lecture_id": 2
+  },
+  {
+    "point": 5,
+    "content": "영어 울렁증 극복할래 뭔가 잼써보임. 귀차니즘 극복해봐야겠음 일단 잼써보여 5별",
+    "member_id": 2,
+    "lecture_id": 2
+  },
+  {
+    "point": 4,
+    "content": "감사합니다. 도움 많이 받았습니다.",
+    "member_id": 2,
+    "lecture_id": 4
+  },
+  {
+    "point": 3,
+    "content": "완전좋아요! 배우는데 완전 유용함",
+    "member_id": 1,
+    "lecture_id": 5
+  },
+  {
+    "point": 5,
+    "content": "좋아요",
+    "member_id": 5,
+    "lecture_id": 1
+  },
+  {
+    "point": 5,
+    "content": "쌤 너무 좋습니다. 진짜 잘 가르쳐주시고 계속 돌려 볼 수 있으니까 이런 점은 좋아요",
+    "member_id": 5,
+    "lecture_id": 2
+  },
+  {
+    "point": 4,
+    "content": "정성스러운 강의굿 ",
+    "member_id": 1,
+    "lecture_id": 5
+  },
+  {
+    "point": 1,
+    "content": "ㅂㄹ",
+    "member_id": 1,
+    "lecture_id": 4
+  }
+]

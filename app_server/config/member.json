@@ -1,0 +1,32 @@
+[
+  {
+      "email" : "suzy@gmail.com",
+      "password" : "1111",
+      "nickname" : "수지",
+      "profile_img" : "suji.jpeg"
+  },
+  {
+      "email" : "hyoshin@gmail.com",
+      "password" : "1111",
+      "nickname" : "hyoshin",
+      "profile_img" : "hyoshin.jpeg"
+  },
+  {
+      "email" : "jongsuk@gmail.com",
+      "password" : "1111",
+      "nickname" : "jongsuk",
+      "profile_img" : "jongsuk.png"
+  },
+  {
+      "email" : "iu@gmail.com",
+      "password" : "1111",
+      "nickname" : "iu",
+      "profile_img" : "iu.jpeg"
+  },
+  {
+      "email" : "zzwei@gmail.com",
+      "password" : "1111",
+      "nickname" : "zzwei",
+      "profile_img" : "zzwei.png"
+  }
+]

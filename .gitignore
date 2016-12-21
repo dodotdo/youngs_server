@@ -1,0 +1,19 @@
+app_server/venv/*
+app_server/youngs_server/.idea/*
+
+**/*.pyc
+**/*.pyo
+.idea/*
+**/*.jpg
+app_server/redis-3.2.0/*
+venv/*
+app_server/log/*
+<<<<<<< HEAD
+
+.idea/youngs_server.iml
+
+.idea/workspace.xml
+
+.idea/misc.xml
+=======
+>>>>>>> origin/develop
