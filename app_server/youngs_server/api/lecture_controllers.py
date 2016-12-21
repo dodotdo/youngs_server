@@ -250,9 +250,7 @@ class LectureAttendItem(Resource):
         token = request.headers.get('Authorization').replace('JWT ', '', 1)
         res = youngs_redis.srem(Constants.redis_youngs_live_lecture_listener_key(lecture_id), current_userid)
         youngs_redis.hdel('auth:token:'+token, {'lecture_id': lecture_id})
-        print('current_userid', current_userid)
-        print('lecture teature', lecture.member_id)
-        if current_userid == lecture.member_id:
+        if current_userid == lecture.member_id or len(youngs_redis.srem(Constants.redis_youngs_live_lecture_listener_key(lecture_id))) == 0:
             # teacher exit
             lecture.status = 'FINISHED'
         else:
