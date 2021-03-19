@@ -61,7 +61,7 @@ httplib2==0.9.2
 imagesize==0.7.1
 iso8601==0.1.11
 itsdangerous==0.24
-Jinja2==2.8
+Jinja2==2.11.3
 jsonschema==2.5.1
 kombu==3.0.35
 lazy-object-proxy==1.2.2
