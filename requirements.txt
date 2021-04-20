@@ -125,7 +125,7 @@ uritemplate==0.6
 urllib3==1.15.1
 virtualenv==15.0.2
 webassets==0.11.1
-Werkzeug==0.11.2
+Werkzeug==0.15.3
 wrapt==1.10.8
 WTForms==1.0.5
 zope.interface==4.2.0
