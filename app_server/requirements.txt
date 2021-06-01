@@ -122,7 +122,7 @@ traceback2==1.4.0
 Twisted==16.3.0
 unittest2==1.1.0
 uritemplate==0.6
-urllib3==1.15.1
+urllib3==1.26.5
 virtualenv==15.0.2
 webassets==0.11.1
 Werkzeug==0.11.2
